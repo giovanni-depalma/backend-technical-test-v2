@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MainApplication<backend-technical-test>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.tui.proof.MainApplication",
+            "projectName": "backend-technical-test",
+            "args": ""
+        }
+    ]
+}

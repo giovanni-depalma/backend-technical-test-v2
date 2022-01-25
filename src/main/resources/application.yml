@@ -1,0 +1,14 @@
+server:
+  servlet:
+    context-path: /api/v1
+
+spring:
+  jpa:  
+    show-sql: true
+  main:
+    orders: 
+      orderable_quantity: 
+      - 5
+      - 10
+      - 15
+      price: 1.33
