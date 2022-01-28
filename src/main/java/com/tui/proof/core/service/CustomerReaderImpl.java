@@ -2,7 +2,6 @@ package com.tui.proof.core.service;
 
 import com.tui.proof.core.domain.data.Customer;
 import com.tui.proof.core.domain.data.PersonalInfo;
-import com.tui.proof.core.domain.exception.ItemNotFoundException;
 import com.tui.proof.core.gateway.CustomerGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

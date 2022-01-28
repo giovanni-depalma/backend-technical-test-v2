@@ -8,9 +8,9 @@ import com.tui.proof.core.domain.data.PersonalInfo;
 
 public interface CustomerGateway {
 
-    public Optional<Customer> findById(Long id);
+    Optional<Customer> findById(Long id);
 
-    public Stream<Customer> findAll();
+    Stream<Customer> findAll();
 
-    public Stream<Customer> findByExample(PersonalInfo example);
+    Stream<Customer> findByExample(PersonalInfo example);
 }

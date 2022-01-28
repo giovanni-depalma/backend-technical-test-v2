@@ -1,10 +1,11 @@
 server:
+  port: ${PORT:8081}
   servlet:
     context-path: /api
 
 is:
-  base-url: http://localhost:10000/auth
-  realm: tui-pilotes
+  base-url: ${IS_PROTOCOL:http}://${IS_HOST:localhost}:${IS_PORT:10000}/auth
+  realm: ${IS_REALM:tui-pilotes}
   realm-url: ${is.base-url}/realms/${is.realm}
 
 spring:

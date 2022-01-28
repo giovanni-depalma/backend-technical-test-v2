@@ -9,12 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,7 +30,6 @@ public class OrderReaderImplTest {
 
     @Test
     public void shouldFindAll() {
-        int expectedSize = 10;
         List<Order> expected = FakeListBuilder.buildList(()-> Order.builder().build());
         when(orderGateway.findAll()).thenReturn(expected.stream());
         List<Order> actual = reader.findAll().toList();

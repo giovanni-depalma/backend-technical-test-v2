@@ -6,9 +6,9 @@ import lombok.*;
 @Value
 @Builder
 public class Order {
-    private final String id;
-    private final OrderSummary orderSummary;
-    private final Address delivery;
-    private final PersonalInfo customer;
+    String id;
+    OrderSummary orderSummary;
+    Address delivery;
+    PersonalInfo customer;
 
 }

@@ -29,7 +29,6 @@ public class OrderCreatorImpl implements OrderCreator{
             throw new BadPilotesOrderException();
         Instant createdAt = timerGateway.now();
         Instant editableUntil = orderRules.calculateEditableUntil(createdAt);
-        BigDecimal orderTotal = orderRules.calculateTotal(orderRequest.getPilotes());
         Order order = buildOrder(orderRequest, createdAt, editableUntil);
         return orderGateway.create(order);
     }

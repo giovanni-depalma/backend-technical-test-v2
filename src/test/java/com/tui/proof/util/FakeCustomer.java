@@ -1,6 +1,5 @@
 package com.tui.proof.util;
 
-import com.github.javafaker.Commerce;
 import com.github.javafaker.Faker;
 import com.tui.proof.core.domain.data.Customer;
 import com.tui.proof.core.domain.data.PersonalInfo;

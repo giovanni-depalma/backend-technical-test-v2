@@ -1,9 +1,7 @@
 package com.tui.proof.data.db.mapper;
 
 import com.github.javafaker.Faker;
-import com.tui.proof.core.domain.data.Address;
 import com.tui.proof.core.domain.data.Order;
-import com.tui.proof.core.domain.data.OrderSummary;
 import com.tui.proof.core.domain.data.PersonalInfo;
 import com.tui.proof.data.db.entities.CustomerData;
 import com.tui.proof.data.db.entities.OrderData;
@@ -12,8 +10,6 @@ import com.tui.proof.util.FakeOrder;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,7 +22,6 @@ public class OrderMapperTest {
     public void shouldMapToDomain() {
         CustomerMapper customerMapper = Mockito.mock(CustomerMapper.class);
         OrderMapper mapper = new OrderMapper(customerMapper);
-        Faker faker = new Faker(new Random());
         OrderData orderData = FakeOrder.buildOrderData();
         PersonalInfo expectedPersonalInfo = FakeCustomer.buildPersonalInfo();
         when(customerMapper.toPersonalInfo(orderData.getCustomer())).thenReturn(expectedPersonalInfo);

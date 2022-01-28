@@ -1,12 +1,6 @@
 package com.tui.proof.presenter.rest;
 
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import com.tui.proof.core.domain.data.Order;
 import com.tui.proof.core.domain.data.OrderRequest;
@@ -23,11 +17,6 @@ import lombok.AllArgsConstructor;
 public class OrderController {
     private final OrderCreator orderCreator;
     private final OrderUpdater orderUpdater;
-
-    @GetMapping
-    public String a() {
-        return "ok";
-    }
 
     @PostMapping
     public Order create(@Valid @RequestBody OrderRequest request) {

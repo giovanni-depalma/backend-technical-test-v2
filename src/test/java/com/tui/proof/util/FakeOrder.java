@@ -83,7 +83,6 @@ public class FakeOrder {
     }
 
     public static OrderRequest buildBadOrderRequest() {
-        Faker faker = new Faker(new Random());
         PersonalInfo customer = FakeCustomer.buildPersonalInfo();
         return OrderRequest.builder().customer(customer).delivery(FakeAddress.buildAddress()).build();
     }

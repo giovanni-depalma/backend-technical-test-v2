@@ -6,6 +6,6 @@ import lombok.Value;
 @Value
 @Builder
 public class Customer {
-    private long id;
-    private PersonalInfo personalInfo;
+    long id;
+    PersonalInfo personalInfo;
 }

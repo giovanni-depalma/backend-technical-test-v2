@@ -1,19 +1,36 @@
 version: "3.9"
 
+x-IS_PROTOCOL: &IS_PROTOCOL ${IS_PROTOCOL:-http}
+x-IS_HOST: &IS_HOST ${IS_HOST:-identity-server}
+x-IS_PORT: &IS_PORT ${IS_PORT:-8080}
+
+x-is-envs: &IS_ENVS
+  IS_PROTOCOL: *IS_PROTOCOL
+  IS_HOST: *IS_HOST
+  IS_PORT: *IS_PORT
 
 
 services:
-  keycloak:
+  identity-server:
     image: "quay.io/keycloak/keycloak:16.1.1"
     container_name: tui-identity-server
     environment:
-#      KEYCLOAK_IMPORT: /tmp/imports/realm-export.json
+      DB_VENDOR: h2
+      KEYCLOAK_IMPORT: /tmp/imports/realm-export.json
       KEYCLOAK_USER: tui-admin
       KEYCLOAK_PASSWORD: tui-admin
     volumes:
       - ./realm-export.json:/tmp/imports/realm-export.json:ro
     ports:
-      - "10000:8080"
+      - "8080:8080"
+  pilotes-app:
+    build: ..
+    container_name: tui-pilotes-app
+    environment:
+      <<: *IS_ENVS
+    ports:
+      - "8081:8081"
+
 
 
 networks:

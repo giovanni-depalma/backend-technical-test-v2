@@ -4,11 +4,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Set;
 
-import com.tui.proof.core.gateway.TimerGateway;
-
 
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 
 @AllArgsConstructor

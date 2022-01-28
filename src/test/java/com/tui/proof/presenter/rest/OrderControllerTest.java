@@ -50,7 +50,6 @@ public class OrderControllerTest {
     @Test
     public void shouldNotCreateOrderWithBadData() throws Exception {
         OrderRequest request = FakeOrder.buildBadOrderRequest();
-        Order expected = FakeOrder.buildOrder();
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
         this.mockMvc.perform(post("/public/orders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
@@ -83,7 +82,6 @@ public class OrderControllerTest {
     public void shouldNotUpdateOrderNotPresent() throws Exception {
         String id = "1";
         OrderRequest request = FakeOrder.buildOrderRequest();
-        Order expected = FakeOrder.buildOrder();
         when(orderUpdater.updateOrder(id, request)).thenThrow(ItemNotFoundException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
@@ -94,7 +92,6 @@ public class OrderControllerTest {
     public void shouldNotUpdateOrderClosed() throws Exception {
         String id = "1";
         OrderRequest request = FakeOrder.buildOrderRequest();
-        Order expected = FakeOrder.buildOrder();
         when(orderUpdater.updateOrder(id, request)).thenThrow(EditingClosedOrderException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
@@ -105,7 +102,6 @@ public class OrderControllerTest {
     public void shouldNotUpdateBadNumberOfPilotes() throws Exception {
         String id = "1";
         OrderRequest request = FakeOrder.buildOrderRequest();
-        Order expected = FakeOrder.buildOrder();
         when(orderUpdater.updateOrder(id, request)).thenThrow(BadPilotesOrderException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);

@@ -1,25 +1,19 @@
 package com.tui.proof.core.service;
 
-import com.github.javafaker.Faker;
 import com.tui.proof.core.domain.data.*;
 import com.tui.proof.core.domain.exception.BadPilotesOrderException;
 import com.tui.proof.core.domain.rules.OrderRules;
 import com.tui.proof.core.gateway.OrderGateway;
 import com.tui.proof.core.gateway.TimerGateway;
 import com.tui.proof.util.FakeOrder;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.util.Assert;
 
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,8 +57,6 @@ public class OrderCreatorImplTest {
     public void shouldNotCreateOrder() {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(false);
-        assertThrows(BadPilotesOrderException.class, () -> {
-            orderCreator.createOrder(request);
-        });
+        assertThrows(BadPilotesOrderException.class, () -> orderCreator.createOrder(request));
     }
 }

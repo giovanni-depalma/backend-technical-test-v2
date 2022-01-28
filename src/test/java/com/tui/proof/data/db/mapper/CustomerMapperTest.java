@@ -1,13 +1,10 @@
 package com.tui.proof.data.db.mapper;
 
-import com.github.javafaker.Faker;
 import com.tui.proof.core.domain.data.Customer;
 import com.tui.proof.core.domain.data.PersonalInfo;
 import com.tui.proof.data.db.entities.CustomerData;
 import com.tui.proof.util.FakeCustomer;
 import org.junit.jupiter.api.Test;
-
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,7 +1,6 @@
 package com.tui.proof.util;
 
 import java.util.List;
-import java.util.function.IntFunction;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 

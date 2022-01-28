@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "is.base-url",
+      "type": "java.lang.String",
+      "description": "base url of Identity Server."
+    },
+    {
+      "name": "is.realm",
+      "type": "java.lang.String",
+      "description": "Name of realm."
+    },
+    {
+      "name": "is.realm-url",
+      "type": "java.lang.String",
+      "description": "Realm Url."
+    }
+  ] }

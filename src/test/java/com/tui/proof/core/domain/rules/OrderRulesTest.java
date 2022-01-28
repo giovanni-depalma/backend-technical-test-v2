@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class OrderRulesTest {
 
-    private BigDecimal priceForPilote = new BigDecimal("1.33");
-    private Set<Integer> allowedPilotes = Set.of(5, 10, 15);
-    private long closeOrderAfterSeconds = 5*60;
-    private OrderRules rules = new OrderRules(priceForPilote, allowedPilotes,closeOrderAfterSeconds);
+    private final BigDecimal priceForPilote = new BigDecimal("1.33");
+    private final Set<Integer> allowedPilotes = Set.of(5, 10, 15);
+    private final long closeOrderAfterSeconds = 5*60;
+    private final OrderRules rules = new OrderRules(priceForPilote, allowedPilotes,closeOrderAfterSeconds);
 
 
     @TestFactory

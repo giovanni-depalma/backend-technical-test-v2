@@ -1,7 +1,6 @@
 package com.tui.proof.core.service;
 
 import com.tui.proof.core.domain.data.Customer;
-import com.tui.proof.core.domain.data.Order;
 import com.tui.proof.core.domain.data.PersonalInfo;
 import com.tui.proof.core.gateway.CustomerGateway;
 import com.tui.proof.util.FakeCustomer;
@@ -10,12 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

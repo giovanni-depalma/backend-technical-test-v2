@@ -11,9 +11,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface OrderRepositoryJpa extends JpaRepository<OrderData, Long> {
 
     @EntityGraph(value = "graph.order.customer")
-    public List<OrderData> findAll();
+    List<OrderData> findAll();
 
     @EntityGraph(value = "graph.order.customer")
-    public <S extends OrderData> List<S> findAll(Example<S> example);
+    <S extends OrderData> List<S> findAll(Example<S> example);
 
 }

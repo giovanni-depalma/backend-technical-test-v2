@@ -1,8 +1,6 @@
 package com.tui.proof.core.domain.data;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 import lombok.Builder;
 import lombok.Value;
@@ -10,15 +8,11 @@ import lombok.Value;
 @Value
 @Builder
 public class Address {
-  @NotBlank
-  private String street;
+  @NotBlank String street;
 
-  @NotBlank
-  private String postcode;
+  @NotBlank String postcode;
 
-  @NotBlank
-  private String city;
+  @NotBlank String city;
 
-  @NotBlank
-  private String country;
+  @NotBlank String country;
 }

@@ -2,7 +2,6 @@ package com.tui.proof.core.service;
 
 import com.tui.proof.core.domain.data.Order;
 import com.tui.proof.core.domain.data.PersonalInfo;
-import com.tui.proof.core.domain.rules.OrderRules;
 import com.tui.proof.core.gateway.OrderGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

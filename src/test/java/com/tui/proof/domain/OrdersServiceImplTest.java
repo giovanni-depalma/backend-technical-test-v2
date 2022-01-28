@@ -1,9 +1,5 @@
 package com.tui.proof.domain;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.util.stream.Stream;
-
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -35,10 +31,5 @@ public class OrdersServiceImplTest {
                 }));
     }
 */
-    @Test
-    void lambdaExpressions() {
-        assertTrue(Stream.of(1, 2, 3)
-                .mapToInt(i -> i)
-                .sum() > 5, () -> "Sum should be greater than 5");
-    }
+
 }

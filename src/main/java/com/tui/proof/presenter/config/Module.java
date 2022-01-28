@@ -1,13 +1,6 @@
 package com.tui.proof.presenter.config;
 
-import com.tui.proof.core.domain.rules.OrderRules;
-import com.tui.proof.core.gateway.TimerGateway;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 @Configuration
 public class Module {

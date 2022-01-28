@@ -10,14 +10,11 @@ import lombok.Value;
 @Value
 @Builder
 public class OrderRequest {
-    @Positive
-    private int pilotes;
+    @Positive int pilotes;
 
     @NotNull
-    @Valid
-    private Address delivery;
+    @Valid Address delivery;
 
     @NotNull
-    @Valid
-    private PersonalInfo customer;
+    @Valid PersonalInfo customer;
 }

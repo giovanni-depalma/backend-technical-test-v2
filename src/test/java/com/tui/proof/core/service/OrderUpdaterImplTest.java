@@ -1,10 +1,7 @@
 package com.tui.proof.core.service;
 
-import com.github.javafaker.Faker;
 import com.tui.proof.core.domain.data.Order;
 import com.tui.proof.core.domain.data.OrderRequest;
-import com.tui.proof.core.domain.data.OrderSummary;
-import com.tui.proof.core.domain.data.PersonalInfo;
 import com.tui.proof.core.domain.exception.BadPilotesOrderException;
 import com.tui.proof.core.domain.exception.EditingClosedOrderException;
 import com.tui.proof.core.domain.exception.ItemNotFoundException;
@@ -17,14 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,7 +40,6 @@ public class OrderUpdaterImplTest {
 
     @Test
     public void shouldUpdateOrderUntilTheEnd() {
-        Faker faker = new Faker();
         Order orderAlreadyPresent = FakeOrder.buildOrder();
         String id = orderAlreadyPresent.getId();
         OrderRequest request = FakeOrder.buildOrderRequest();
@@ -72,9 +64,7 @@ public class OrderUpdaterImplTest {
         String id = "1";
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(false);
-        assertThrows(BadPilotesOrderException.class, () -> {
-            orderUpdater.updateOrder(id, request);
-        });
+        assertThrows(BadPilotesOrderException.class, () -> orderUpdater.updateOrder(id, request));
     }
 
     @Test
@@ -82,14 +72,11 @@ public class OrderUpdaterImplTest {
         Order orderAlreadyPresent = FakeOrder.buildOrder();
         String id = orderAlreadyPresent.getId();
         OrderRequest request = FakeOrder.buildOrderRequest();
-        Order expectedOrder = FakeOrder.buildOrderWithId(id, orderAlreadyPresent.getOrderSummary().getCreatedAt(), orderAlreadyPresent.getOrderSummary().getEditableUntil(), request);
-        Instant timeAfterClose = orderAlreadyPresent.getOrderSummary().getEditableUntil().plusNanos(1l);
+        Instant timeAfterClose = orderAlreadyPresent.getOrderSummary().getEditableUntil().plusNanos(1L);
         when(timerGateway.now()).thenReturn(timeAfterClose);
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
         when(orderGateway.findById(id)).thenReturn(Optional.of(orderAlreadyPresent));
-        assertThrows(EditingClosedOrderException.class, () -> {
-            orderUpdater.updateOrder(id, request);
-        });
+        assertThrows(EditingClosedOrderException.class, () -> orderUpdater.updateOrder(id, request));
     }
 
     @Test
@@ -98,9 +85,7 @@ public class OrderUpdaterImplTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
         when(orderGateway.findById(id)).thenReturn(Optional.empty());
-        assertThrows(ItemNotFoundException.class, () -> {
-            orderUpdater.updateOrder(id, request);
-        });
+        assertThrows(ItemNotFoundException.class, () -> orderUpdater.updateOrder(id, request));
     }
 
 
