@@ -45,7 +45,7 @@ public class CustomerGatewayImpl implements CustomerGateway {
 
     public CustomerData saveOrUpdate(PersonalInfo customer) {
         Optional<CustomerData> found = customerRepositoryJpa.findByEmail(customer.getEmail());
-        CustomerData toSave = found.orElseGet(() -> new CustomerData());
+        CustomerData toSave = found.orElseGet(CustomerData::new);
         mapper.populateData(toSave, customer);
         return customerRepositoryJpa.save(toSave);
     }

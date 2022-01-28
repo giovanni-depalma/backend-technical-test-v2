@@ -37,7 +37,7 @@ public class OrderGatewayImpl implements OrderGateway {
 
     @Override
     public Order update(Order order) {
-        Long id = Long.parseLong(order.getOrderSummary().getId());
+        Long id = Long.parseLong(order.getId());
         OrderData toUpdate = orderRepositoryJpa.getById(id);
         CustomerData customer = customerGateway.saveOrUpdate(order.getCustomer());
         mapper.populateData(toUpdate, order, customer);

@@ -37,8 +37,8 @@ public class OrderData {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
+    @Column(name = "editable_until", nullable = false)
+    private Instant editableUntil;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

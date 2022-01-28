@@ -1,36 +1,24 @@
 package com.tui.proof.data.db.mapper;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Random;
-
 import com.github.javafaker.Faker;
 import com.tui.proof.core.domain.data.Customer;
 import com.tui.proof.core.domain.data.PersonalInfo;
 import com.tui.proof.data.db.entities.CustomerData;
-import com.tui.proof.data.db.mapper.CustomerMapper;
-
+import com.tui.proof.util.FakeCustomer;
 import org.junit.jupiter.api.Test;
+
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CustomerMapperTest {
 
-    private CustomerData createCustomerData() {
-        CustomerData customerData = new CustomerData();
-        Faker faker = new Faker(new Random());
-        customerData.setFirstName(faker.name().firstName());
-        customerData.setLastName(faker.name().firstName());
-        String email = faker.bothify("????##@gmail.com");
-        customerData.setEmail(email);
-        customerData.setTelephone(faker.phoneNumber().phoneNumber());
-        customerData.setId(1l);
-        return customerData;
-    }
 
     @Test
     public void shouldMapToPersonalInfo() {
         CustomerMapper mapper = new CustomerMapper();
-        CustomerData customerData = createCustomerData();
+        CustomerData customerData = FakeCustomer.buildCustomerData();
         PersonalInfo actual = mapper.toPersonalInfo(customerData);
         assertAll(
                 () -> assertEquals(customerData.getFirstName(), actual.getFirstName()),
@@ -42,7 +30,7 @@ public class CustomerMapperTest {
     @Test
     public void shouldMapToDomain() {
         CustomerMapper mapper = new CustomerMapper();
-        CustomerData customerData = createCustomerData();
+        CustomerData customerData = FakeCustomer.buildCustomerData();
         Customer actual = mapper.toDomain(customerData);
         PersonalInfo actualPersonalInfo = actual.getPersonalInfo();
         assertAll(
@@ -57,11 +45,7 @@ public class CustomerMapperTest {
     public void shouldPopulateData() {
         CustomerMapper mapper = new CustomerMapper();
         CustomerData customerData = new CustomerData();
-        Faker faker = new Faker(new Random());
-        String email = faker.bothify("????##@gmail.com");
-        PersonalInfo personalInfo = PersonalInfo.builder().firstName(faker.name().firstName())
-                .lastName(faker.name().lastName()).email(email).telephone(faker.phoneNumber().phoneNumber())
-                .build();
+        PersonalInfo personalInfo = FakeCustomer.buildPersonalInfo();
 
         mapper.populateData(customerData, personalInfo);
         assertAll(

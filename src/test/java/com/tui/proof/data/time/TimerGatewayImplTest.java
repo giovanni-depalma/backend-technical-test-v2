@@ -10,12 +10,14 @@ import org.junit.jupiter.api.Test;
 public class TimerGatewayImplTest {
     
     @Test
-    public void shouldReturnTime(){
+    public void shouldReturnValidTime(){
         TimerGatewayImpl timerGateway = new TimerGatewayImpl();
         Instant before = Instant.now();
         Instant actual = timerGateway.now();
         Instant after = Instant.now();
         assertNotNull(actual);
-      //  assertTrue(actual. >= before && actual <=after);
+        assertTrue(actual.compareTo(before) >= 0);
+        assertTrue(actual.compareTo(after) <= 0);
     }
+
 }

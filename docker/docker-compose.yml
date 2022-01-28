@@ -1,0 +1,21 @@
+version: "3.9"
+
+
+
+services:
+  keycloak:
+    image: "quay.io/keycloak/keycloak:16.1.1"
+    container_name: tui-identity-server
+    environment:
+#      KEYCLOAK_IMPORT: /tmp/imports/realm-export.json
+      KEYCLOAK_USER: tui-admin
+      KEYCLOAK_PASSWORD: tui-admin
+    volumes:
+      - ./realm-export.json:/tmp/imports/realm-export.json:ro
+    ports:
+      - "10000:8080"
+
+
+networks:
+  default:
+    name: tui-pilotes

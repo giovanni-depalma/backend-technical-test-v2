@@ -4,9 +4,10 @@ package com.tui.proof.data.db.mapper;
 import com.tui.proof.core.domain.data.Customer;
 import com.tui.proof.core.domain.data.PersonalInfo;
 import com.tui.proof.data.db.entities.CustomerData;
+import org.springframework.stereotype.Component;
 
 
-
+@Component
 public class CustomerMapper {
 
     public Customer toDomain(CustomerData customerData) {

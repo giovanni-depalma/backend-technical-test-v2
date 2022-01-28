@@ -1,9 +1,9 @@
 package com.tui.proof.core.domain.data;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
 public class Customer {
     private long id;

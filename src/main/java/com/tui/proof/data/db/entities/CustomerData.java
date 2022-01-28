@@ -39,7 +39,4 @@ public class CustomerData {
     @Column(nullable = false)
     private String telephone;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer") 
-    private List<OrderData> orders;
-
 }
