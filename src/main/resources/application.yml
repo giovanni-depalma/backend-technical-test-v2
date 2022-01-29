@@ -7,6 +7,8 @@ is:
   base-url: ${IS_PROTOCOL:http}://${IS_HOST:localhost}:${IS_PORT:8080}/auth
   realm: ${IS_REALM:tui-pilotes}
   realm-url: ${is.base-url}/realms/${is.realm}
+  client-id: tui-gateway
+  client-secret: 8JNumTbP0pj8iYoCNgrycb3srA4jBHly
 
 spring:
   data:
@@ -23,8 +25,8 @@ spring:
       client:
         registration:
           tui:
-            client-id: tui-gateway
-            client-secret: 8JNumTbP0pj8iYoCNgrycb3srA4jBHly
+            client-id: ${is.client-id}
+            client-secret: ${is.client-secret}
             provider: keycloak
             authorization-grant-type: authorization_code
             scope: openid, profile
@@ -48,9 +50,7 @@ springdoc:
   show-login-endpoint: true
   swagger-ui:
     oauth:
-      clientId: tui-gateway
-      clientSecret: 8JNumTbP0pj8iYoCNgrycb3srA4jBHly
-  oAuthFlow:
-    authorizationUrl: https://localhost:5001
-    tokenUrl: https://localhost:5001/connect/token
+      clientId: ${is.client-id}
+      clientSecret: ${is.client-secret}
+
 

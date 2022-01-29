@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/admin/orders")
 @SecurityRequirement(name = "secure-api")
-@SecurityRequirement(name = "secure-api2")
 @AllArgsConstructor
 public class AdminOrderController {
     private final OrderReader orderReader;
