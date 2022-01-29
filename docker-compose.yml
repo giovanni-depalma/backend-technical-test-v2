@@ -20,11 +20,11 @@ services:
       KEYCLOAK_USER: tui-admin
       KEYCLOAK_PASSWORD: tui-admin
     volumes:
-      - ./realm-export.json:/tmp/imports/realm-export.json:ro
+      - ./volumes/realm-export.json:/tmp/imports/realm-export.json:ro
     ports:
       - "8080:8080"
   pilotes-app:
-    build: ..
+    build: .
     container_name: tui-pilotes-app
     environment:
       <<: *IS_ENVS

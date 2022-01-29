@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/public/orders")
+@RequestMapping("/orders")
 @AllArgsConstructor
 public class OrderController {
     private final OrderCreator orderCreator;

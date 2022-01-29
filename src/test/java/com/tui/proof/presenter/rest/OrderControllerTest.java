@@ -43,7 +43,7 @@ public class OrderControllerTest {
         when(orderCreator.createOrder(request)).thenReturn(expected);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(post("/public/orders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
+        this.mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
                 .andExpectAll(OrderMatcher.checkOrder(expected));
     }
 
@@ -52,7 +52,7 @@ public class OrderControllerTest {
         OrderRequest request = FakeOrder.buildBadOrderRequest();
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(post("/public/orders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class OrderControllerTest {
         when(orderUpdater.updateOrder(id, request)).thenReturn(expected);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/public/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
+        this.mockMvc.perform(put("/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
                 .andExpectAll(OrderMatcher.checkOrder(expected));
     }
 
@@ -75,7 +75,7 @@ public class OrderControllerTest {
         when(orderUpdater.updateOrder(id, request)).thenReturn(expected);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/public/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(put("/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class OrderControllerTest {
         when(orderUpdater.updateOrder(id, request)).thenThrow(ItemNotFoundException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/public/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isNotFound());
+        this.mockMvc.perform(put("/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class OrderControllerTest {
         when(orderUpdater.updateOrder(id, request)).thenThrow(EditingClosedOrderException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/public/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isForbidden());
+        this.mockMvc.perform(put("/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isForbidden());
     }
 
     @Test
@@ -105,6 +105,6 @@ public class OrderControllerTest {
         when(orderUpdater.updateOrder(id, request)).thenThrow(BadPilotesOrderException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/public/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(put("/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 }

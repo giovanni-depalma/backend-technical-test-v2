@@ -4,7 +4,7 @@ server:
     context-path: /api
 
 is:
-  base-url: ${IS_PROTOCOL:http}://${IS_HOST:localhost}:${IS_PORT:10000}/auth
+  base-url: ${IS_PROTOCOL:http}://${IS_HOST:localhost}:${IS_PORT:8080}/auth
   realm: ${IS_REALM:tui-pilotes}
   realm-url: ${is.base-url}/realms/${is.realm}
 

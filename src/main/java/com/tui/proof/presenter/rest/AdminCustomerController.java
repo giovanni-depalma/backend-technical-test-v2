@@ -8,11 +8,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.util.stream.Stream;
 
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RestController
 @RequestMapping("/admin/customers")
+@SecurityRequirement(name = "secure-api")
 @AllArgsConstructor
 public class AdminCustomerController {
 

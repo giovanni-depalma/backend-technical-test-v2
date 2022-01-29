@@ -4,6 +4,77 @@ TUI DX Backend technical Test v2
 
 The base project uses lombok, so you have to install it. You can use the following guide https://www.baeldung.com/lombok-ide
 
+### Get Started Immediately
+
+In order to start the project  follow these simple instructions:
+
+- Run 'docker-compose up -d' from project folder
+- Wait for services initialization
+- Launch Browser on page: http://localhost:8081/api/swagger-ui/
+
+####
+
+Create your first order with POST /orders
+```json
+{
+  "pilotes": 5,
+  "delivery": {
+    "street": "Poco Mas Drive",
+    "postcode": "2420 ",
+    "city": "Frisco",
+    "country": "TX"
+  },
+  "customer": {
+    "email": "EufrasioAlmanzaCepeda@armyspy.com",
+    "firstName": "Eufrasio Almanza",
+    "lastName": "Cepeda",
+    "telephone": "214-474-0425"
+  }
+}
+```
+
+Update your order with PUT /orders/1
+```json
+{
+  "pilotes": 15,
+  "delivery": {
+    "street": "Poco Mas Drive Change",
+    "postcode": "2420 Change",
+    "city": "Frisco Change",
+    "country": "TX Change"
+  },
+  "customer": {
+    "email": "EufrasioAlmanzaCepeda@armyspy.com",
+    "firstName": "Eufrasio Almanza Change",
+    "lastName": "Cepeda Change",
+    "telephone": "214-474-0425 Change"
+  }
+}
+```
+
+
+
+### Quick Overview
+
+The project is organized in 3 layers
+    
+- Presentation layer
+- Domain layer
+- Data access layer
+
+
+
+
+
+
+```json
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "age": 25
+}
+```
+
 ### Swaggers
 /api/v1/swagger-ui/index.html
 
