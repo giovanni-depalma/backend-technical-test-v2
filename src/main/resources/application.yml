@@ -1,7 +1,7 @@
 server:
   port: ${PORT:8081}
   servlet:
-    context-path: /api
+    context-path: /
 
 is:
   base-url: ${IS_PROTOCOL:http}://${IS_HOST:localhost}:${IS_PORT:8080}/auth
@@ -9,6 +9,10 @@ is:
   realm-url: ${is.base-url}/realms/${is.realm}
 
 spring:
+  data:
+    rest:
+      basePath: /
+      detection-strategy: ANNOTATED
   jpa:  
     show-sql: true
   security:
@@ -40,5 +44,13 @@ spring:
       - 15
       price: "1.33"
       closed_after_seconds: 300
-
+springdoc:
+  show-login-endpoint: true
+  swagger-ui:
+    oauth:
+      clientId: tui-gateway
+      clientSecret: 8JNumTbP0pj8iYoCNgrycb3srA4jBHly
+  oAuthFlow:
+    authorizationUrl: https://localhost:5001
+    tokenUrl: https://localhost:5001/connect/token
 

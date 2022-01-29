@@ -1,23 +1,21 @@
 package com.tui.proof;
 
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.stereotype.Component;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.core.filter.SpecFilter;
+import io.swagger.v3.oas.models.OpenAPI;
 
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@OpenAPIDefinition(info = @Info(title = "TUI Pilotes API", version = "1.0"))
-@SecurityScheme(name = "secure-api", type = SecuritySchemeType.OPENIDCONNECT, in = SecuritySchemeIn.HEADER)
 public class MainApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MainApplication.class, args);
 	}
+
 
 }

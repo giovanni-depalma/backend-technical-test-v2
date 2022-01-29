@@ -21,8 +21,7 @@ import lombok.Setter;
 @Table(name = "orderdata")
 @Getter
 @Setter
-@NamedEntityGraph(name = "graph.order.customer", attributeNodes = @NamedAttributeNode("customer"))
-public class OrderData {
+public class OrderData2 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,15 +32,15 @@ public class OrderData {
     @Column(nullable = false)
     private Integer pilotes;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private CustomerData customer;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
     @Column(name = "editable_until", nullable = false)
     private Instant editableUntil;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private CustomerData customer;
 
     @Column(name = "delivery_street", nullable = false)
     private String deliveryStreet;
