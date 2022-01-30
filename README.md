@@ -143,6 +143,21 @@ The application manages timetables with the Instant class, and serialize the dat
 2022-01-30T21:47:00.173464Z
 ```
 
+### Security
+The application it's configured as "resource server" and interact with an Identity Server (Keycloak).
+The docker-compose launch a preconfigured instance of Keycloak, with the "tui-pilotes" realm.
+The following roles are also configured:
+
+- admin (used by app)
+- customer (actually not used)
+
+The following users have been configured for testing
+- tui-admin/tui-admin (admin)
+- tui-customer/tui-customer (customer)
+- tui-all/tui-all (admin,customer)
+
+
+
 
 
 
