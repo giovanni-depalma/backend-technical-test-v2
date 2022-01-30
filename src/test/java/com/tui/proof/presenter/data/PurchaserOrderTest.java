@@ -2,7 +2,6 @@ package com.tui.proof.presenter.data;
 
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
-import com.tui.proof.domain.entities.PersonalInfo;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 

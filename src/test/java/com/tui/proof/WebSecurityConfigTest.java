@@ -1,17 +1,16 @@
 package com.tui.proof;
 
-import com.nimbusds.jwt.JWT;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class WebSecurityConfigTest {
 
@@ -28,13 +27,15 @@ public class WebSecurityConfigTest {
                 .claim("resource_access", resourceAccess)
                 .build();
         List<GrantedAuthority> actual = converter.convert(jwt);
+        assertNotNull(actual);
+        assertEquals(3, actual.size());
         assertEquals("ROLE_ADMIN", actual.get(0).toString());
         assertEquals("ROLE_CUSTOMER", actual.get(1).toString());
         assertEquals("ROLE_OTHER", actual.get(2).toString());
     }
 
     @Test
-    public void shouldThrowExceptiion(){
+    public void shouldThrowException(){
         WebSecurityConfig.RealmRoleConverter converter = new WebSecurityConfig.RealmRoleConverter();
         Jwt jwt = Jwt.withTokenValue("token")
                 .header("alg", "none")

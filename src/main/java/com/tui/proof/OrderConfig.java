@@ -16,12 +16,12 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "spring.main.orders")
 @Data
 public class OrderConfig {
-    private Set<Integer> orderableQuantity;
+    private Set<Integer> allowedQuantity;
     private BigDecimal price;
     private int closedAfterSeconds;
 
     @Bean
     public OrderRules createRules() {
-        return new OrderRules(new Money(price), orderableQuantity, closedAfterSeconds);
+        return new OrderRules(new Money(price), allowedQuantity, closedAfterSeconds);
     }
 }

@@ -14,5 +14,15 @@
       "name": "is.realm-url",
       "type": "java.lang.String",
       "description": "Realm Url."
+    },
+    {
+      "name": "is.client-id",
+      "type": "java.lang.String",
+      "description": "Client-id."
+    },
+    {
+      "name": "is.client-secret",
+      "type": "java.lang.String",
+      "description": "Client-secret."
     }
   ] }

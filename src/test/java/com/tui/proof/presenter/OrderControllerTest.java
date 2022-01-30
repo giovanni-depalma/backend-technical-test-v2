@@ -56,9 +56,6 @@ public class OrderControllerTest {
             return IntStream.range(0, orders.size()).mapToObj(i -> checkOrder("$["+i+"].", orders.get(i))).flatMap(Arrays::stream).toArray(ResultMatcher[]::new);
         }
 
-        private static ResultMatcher[] checkOrder(Order order) {
-            return checkOrder("", order);
-        }
 
         private static ResultMatcher[] checkOrder(String prefix, Order order) {
             MoneySerializer serializer = new MoneySerializer();

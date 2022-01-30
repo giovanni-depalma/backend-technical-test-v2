@@ -42,10 +42,6 @@ public class FakeOrder {
     }
 
     public static Order buildOrder(OrderRequest request) {
-        Faker faker = new Faker(new Random());
-        Instant createdAt = fakeCreatedAt(faker);
-        Instant editableUntil = fakeEditableUntil(faker);
-        Money total = fakeTotal(faker);
         Order order = buildOrder();
         Customer customer = new Customer();
         customer.setPersonalInfo(request.getCustomer());

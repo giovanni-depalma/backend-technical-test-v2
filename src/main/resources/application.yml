@@ -22,22 +22,6 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${is.realm-url}/protocol/openid-connect/certs
-      client:
-        registration:
-          tui:
-            client-id: ${is.client-id}
-            client-secret: ${is.client-secret}
-            provider: keycloak
-            authorization-grant-type: authorization_code
-            scope: openid, profile
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-        provider:
-          keycloak:
-            authorization-uri: ${is.realm-url}/protocol/openid-connect/auth
-            jwk-set-uri: ${is.realm-url}/protocol/openid-connect/certs
-            user-info-uri: ${is.realm-url}/protocol/openid-connect/userinfo
-            token-uri: ${is.realm-url}/protocol/openid-connect/token
-            user-name-attribute: preferred_username
   main:
     orders: 
       orderable_quantity: 

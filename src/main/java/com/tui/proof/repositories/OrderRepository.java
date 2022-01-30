@@ -16,7 +16,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 @Tag(name = "Order", description = "Endpoints for Admin to view and manage orders")
 @SecurityRequirement(name = "secure-api")

@@ -20,10 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
@@ -116,15 +113,8 @@ public class PurchaserOrderControllerTest {
 
     private static class OrderMatcher {
 
-        private static ResultMatcher[] checkOrders(List<Order> orders) {
-            return IntStream.range(0, orders.size()).mapToObj(i -> checkOrder("$["+i+"].", orders.get(i))).flatMap(Arrays::stream).toArray(ResultMatcher[]::new);
-        }
-
         private static ResultMatcher[] checkOrder(Order order) {
-            return checkOrder("", order);
-        }
-
-        private static ResultMatcher[] checkOrder(String prefix, Order order) {
+            final String prefix = "";
             MoneySerializer serializer = new MoneySerializer();
             PersonalInfo personalInfo = order.getCustomer().getPersonalInfo();
             return new ResultMatcher[]{

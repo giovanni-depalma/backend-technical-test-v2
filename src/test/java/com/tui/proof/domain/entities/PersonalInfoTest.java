@@ -4,7 +4,7 @@ import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import org.junit.jupiter.api.Test;
 
-public class PersonalnfoTest {
+public class PersonalInfoTest {
 
     @Test
     public void shouldToString() {

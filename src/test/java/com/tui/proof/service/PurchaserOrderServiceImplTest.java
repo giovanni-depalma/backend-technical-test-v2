@@ -69,7 +69,7 @@ public class PurchaserOrderServiceImplTest {
     }
 
     @Test
-    public void shouldNotCreateAfterInteralError() {
+    public void shouldNotCreateAfterInternalError() {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.getPilotes())).thenThrow(RuntimeException.class);
         assertThrows(OperationException.class, () -> service.createOrder(request));
