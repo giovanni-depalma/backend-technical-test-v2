@@ -3,6 +3,7 @@ package com.tui.proof.service;
 import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.repositories.OrderRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +21,19 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 
     @Override
     public List<Order> findByCustomer(PersonalInfo personalInfo) {
-        log.debug("findByCustomer with by example {}", personalInfo);
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase();
-        Order orderData = new Order();
-        Customer customer = new Customer();
-        customer.setPersonalInfo(personalInfo);
-        orderData.setCustomer(customer);
-        return orderRepository.findAll(Example.of(orderData, matcher));
+        try{
+            log.debug("findByCustomer with by example {}", personalInfo);
+            ExampleMatcher matcher = ExampleMatcher.matching()
+                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase();
+            Order orderData = new Order();
+            Customer customer = new Customer();
+            customer.setPersonalInfo(personalInfo);
+            orderData.setCustomer(customer);
+            return orderRepository.findAll(Example.of(orderData, matcher));
+        }
+        catch (Exception e){
+            log.error("error finding {}", personalInfo, e);
+            throw new ServiceException();
+        }
     }
 }

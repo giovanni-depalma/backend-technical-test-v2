@@ -1,7 +1,7 @@
 package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.exception.OperationException;
+import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.service.data.OrderRequest;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
@@ -47,7 +47,7 @@ public class PurchaserOrderServiceImplTest {
     private PurchaserOrderServiceImpl service;
 
     @Test
-    public void shouldCreateOrder() {
+    public void shouldCreateOrder() throws BadPilotesOrderException {
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expectedOrder = FakeOrder.buildOrder(request);
         Instant now = expectedOrder.getCreatedAt();
@@ -72,7 +72,7 @@ public class PurchaserOrderServiceImplTest {
     public void shouldNotCreateAfterInternalError() {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.getPilotes())).thenThrow(RuntimeException.class);
-        assertThrows(OperationException.class, () -> service.createOrder(request));
+        assertThrows(ServiceException.class, () -> service.createOrder(request));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class PurchaserOrderServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateOrderUntilTheEnd() {
+    public void shouldUpdateOrderUntilTheEnd() throws BadPilotesOrderException, EditingClosedOrderException, ItemNotFoundException {
         Order orderAlreadyPresent = FakeOrder.buildOrder();
         UUID id = orderAlreadyPresent.getId();
         OrderRequest request = FakeOrder.buildOrderRequest();
@@ -140,6 +140,6 @@ public class PurchaserOrderServiceImplTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenThrow(RuntimeException.class);
-        assertThrows(OperationException.class, () -> service.updateOrder(id, request));
+        assertThrows(ServiceException.class, () -> service.updateOrder(id, request));
     }
 }

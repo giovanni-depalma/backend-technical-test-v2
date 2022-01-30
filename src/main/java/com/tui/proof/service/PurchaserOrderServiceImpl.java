@@ -4,7 +4,7 @@ import com.tui.proof.domain.entities.*;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;
-import com.tui.proof.domain.exception.OperationException;
+import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.domain.rules.OrderRules;
 import com.tui.proof.repositories.OrderRepository;
 import com.tui.proof.service.data.OrderRequest;
@@ -27,7 +27,7 @@ public class PurchaserOrderServiceImpl implements PurchaserOrderService{
 
 
     @Override
-    public Order createOrder(OrderRequest orderRequest) {
+    public Order createOrder(OrderRequest orderRequest) throws BadPilotesOrderException {
         try{
             log.debug("create order: {}", orderRequest);
             checkOrderRequest(orderRequest);
@@ -43,17 +43,17 @@ public class PurchaserOrderServiceImpl implements PurchaserOrderService{
             toSave.setTotal(total);
             return orderRepository.save(toSave);
         }
-        catch (BadPilotesOrderException | EditingClosedOrderException e){
+        catch (BadPilotesOrderException e){
             throw e;
         }
         catch(Exception e){
-            log.error("error saving: " + orderRequest, e);
-            throw new OperationException();
+            log.error("error saving: {}", orderRequest, e);
+            throw new ServiceException();
         }
     }
 
     @Override
-    public Order updateOrder(UUID id, OrderRequest orderRequest) {
+    public Order updateOrder(UUID id, OrderRequest orderRequest) throws EditingClosedOrderException, ItemNotFoundException, BadPilotesOrderException {
         try{
             log.debug("update order with uuid {}, request: {}", id, orderRequest);
             checkOrderRequest(orderRequest);
@@ -80,11 +80,11 @@ public class PurchaserOrderServiceImpl implements PurchaserOrderService{
         }
         catch(Exception e){
             log.error("error saving: " + orderRequest, e);
-            throw new OperationException();
+            throw new ServiceException();
         }
     }
 
-    private void checkOrderRequest(OrderRequest orderRequest){
+    private void checkOrderRequest(OrderRequest orderRequest) throws BadPilotesOrderException {
         if(!orderRules.allowedPilotes(orderRequest.getPilotes()))
             throw new BadPilotesOrderException();
     }

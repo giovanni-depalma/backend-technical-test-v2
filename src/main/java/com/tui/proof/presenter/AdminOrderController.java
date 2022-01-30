@@ -6,6 +6,9 @@ import com.tui.proof.service.AdminOrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
 @Tag(name = "Order", description = "Endpoints for Admin to view and manage orders")
@@ -26,8 +31,11 @@ public class AdminOrderController {
     private AdminOrderService orderService;
 
     @PostMapping("/findByCustomer")
-    public List<Order> findByCustomer(@RequestBody PersonalInfo request) {
-        return orderService.findByCustomer(request);
+    public CollectionModel<EntityModel<Order>> findByCustomer(@RequestBody PersonalInfo request) {
+        return CollectionModel.of(orderService.findByCustomer(request).stream().map(order -> {
+            Link selfLink = linkTo(AdminOrderController.class).slash(order.getId()).withSelfRel();
+            return EntityModel.of(order).add(selfLink);
+        }).toList());
     }
 
 }
