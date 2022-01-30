@@ -8,12 +8,13 @@ import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 @JsonComponent
 public class MoneySerializer extends JsonSerializer<Money> {
 
     public String getString(Money value){
-        NumberFormat nf = NumberFormat.getCurrencyInstance();
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.ITALY);
         return value == null ? "" : nf.format(value.getValue());
     }
 
