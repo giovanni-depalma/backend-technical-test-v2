@@ -1,4 +1,4 @@
-package com.tui.proof.presenter;
+package com.tui.proof.presenter.configuration;
 
 import com.tui.proof.domain.entities.Order;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;

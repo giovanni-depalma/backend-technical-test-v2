@@ -1,4 +1,4 @@
-package com.tui.proof.presenter.controller;
+package com.tui.proof.presenter;
 
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.entities.PersonalInfo;

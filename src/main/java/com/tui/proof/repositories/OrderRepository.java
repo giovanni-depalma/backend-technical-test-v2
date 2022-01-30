@@ -22,7 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @SecurityRequirement(name = "secure-api")
 @SecurityRequirement(name = "secure-api2")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
-@RepositoryRestResource(path = "orders", exported = true)
+@RepositoryRestResource(path = "orders")
 public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Override
@@ -42,8 +42,9 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     <S extends Order> List<S> findAll(Example<S> example);
 
     @Override
-    @RestResource(exported = true)
-    Order save(Order entity);
+    @RestResource(exported = false)
+    @PreAuthorize("permitAll")
+    <S extends Order> S save(S entity);
 
     @Override
     @RestResource(exported = false)

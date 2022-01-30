@@ -51,12 +51,14 @@ public class PurchaserOrderServiceImplTest {
         Order expectedOrder = FakeOrder.buildOrder(request);
         Instant now = expectedOrder.getCreatedAt();
         when(timerGateway.now()).thenReturn(now);
+        when(customerService.findByEmailAndSave(request.getCustomer())).thenReturn(expectedOrder.getCustomer());
         when(orderRules.calculateTotal(request.getPilotes())).thenReturn(expectedOrder.getTotal());
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
         when(orderRules.calculateEditableUntil(now)).thenReturn(expectedOrder.getEditableUntil());
         when(orderRepository.save(any())).thenReturn(expectedOrder);
         Order savedOrder = service.createOrder(request);
         assertEquals(expectedOrder, savedOrder);
+        assertEquals(expectedOrder.getCustomer(), savedOrder.getCustomer());
         //verify server side generated fields
         verify(orderRepository, times(1)).save(orderCaptor.capture());
         Order orderSentToRepository = orderCaptor.getValue();
@@ -79,6 +81,7 @@ public class PurchaserOrderServiceImplTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expectedOrder = FakeOrder.buildOrderWithId(id, orderAlreadyPresent.getCreatedAt(), orderAlreadyPresent.getEditableUntil(), request);
         when(timerGateway.now()).thenReturn(expectedOrder.getEditableUntil());
+        when(orderRepository.save(any())).thenReturn(expectedOrder);
         when(orderRules.calculateTotal(request.getPilotes())).thenReturn(expectedOrder.getTotal());
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
         when(orderRepository.findById(any())).thenReturn(Optional.of(orderAlreadyPresent));

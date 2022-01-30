@@ -1,4 +1,4 @@
-package com.tui.proof.presenter.controller;
+package com.tui.proof.presenter;
 
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.service.data.OrderRequest;
@@ -35,13 +35,13 @@ public class PurchaserOrderController {
             @Valid @RequestBody OrderRequest request)
             throws ItemNotFoundException {
         Order order = purchaserOrderService.createOrder(request);
-        PurchaserOrder purchaserOrder = new PurchaserOrder(order);
         return EntityModel.of(order).add(linkTo(PurchaserOrderController.class).slash(order.getId()).withSelfRel());
     }
 
     @PutMapping("/{id}")
-    public Order update(@PathVariable UUID id, @Valid @RequestBody OrderRequest request) {
-        return purchaserOrderService.updateOrder(id, request);
+    public EntityModel<Order> update(@PathVariable UUID id, @Valid @RequestBody OrderRequest request) {
+        Order order = purchaserOrderService.updateOrder(id, request);
+        return EntityModel.of(order).add(linkTo(PurchaserOrderController.class).slash(order.getId()).withSelfRel());
     }
 
 }

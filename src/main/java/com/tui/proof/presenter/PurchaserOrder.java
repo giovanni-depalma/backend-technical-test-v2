@@ -1,4 +1,4 @@
-package com.tui.proof.presenter.controller;
+package com.tui.proof.presenter;
 
 import com.tui.proof.domain.entities.Order;
 import lombok.AllArgsConstructor;
@@ -7,8 +7,8 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Value
 @AllArgsConstructor
-public class PurchaserOrder extends RepresentationModel<PurchaserOrder>{
-    private Order order;
+public class PurchaserOrder{
+    Order order;
 
 
 }

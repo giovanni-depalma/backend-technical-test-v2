@@ -4,8 +4,6 @@ import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-
 public class MoneyTest {
 
     @Test

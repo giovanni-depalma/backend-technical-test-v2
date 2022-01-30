@@ -1,4 +1,4 @@
-package com.tui.proof.presenter;
+package com.tui.proof.presenter.configuration;
 
 import org.springframework.context.annotation.Configuration;
 
