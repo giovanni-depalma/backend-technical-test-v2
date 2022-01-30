@@ -11,18 +11,6 @@ x-is-envs: &IS_ENVS
 
 
 services:
-  proxy: 
-    image: nginx:1.21
-    volumes:
-      - ./volumes/nginx/templates:/etc/nginx/templates:ro
-    environment:
-      <<: *IS_ENVS
-      APP_PORT: 8081
-      APP_HOST: pilotes-app
-      APP_PROTOCOL: http
-      A: 3
-    ports:
-      - "10000:8080"
 
   identity-server:
     image: "quay.io/keycloak/keycloak:16.1.1"
