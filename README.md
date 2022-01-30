@@ -8,6 +8,7 @@ The base project uses lombok, so you have to install it. You can use the followi
 
 In order to start the project  follow these simple instructions:
 
+- Run 'docker-compose build' from project folder
 - Run 'docker-compose up -d' from project folder
 - Wait for services initialization
 - Launch Browser on page: http://localhost:8081/api/swagger-ui/

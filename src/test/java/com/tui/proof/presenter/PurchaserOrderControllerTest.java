@@ -98,7 +98,7 @@ public class PurchaserOrderControllerTest {
         when(orderService.updateOrder(id, request)).thenThrow(EditingClosedOrderException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/purchaserOrders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isForbidden());
+        this.mockMvc.perform(put("/purchaserOrders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isConflict());
     }
 
     @Test

@@ -53,7 +53,7 @@ public class OrderControllerTest {
     private static class OrderMatcher {
 
         private static ResultMatcher[] checkOrders(List<Order> orders) {
-            return IntStream.range(0, orders.size()).mapToObj(i -> checkOrder("$["+i+"].", orders.get(i))).flatMap(Arrays::stream).toArray(ResultMatcher[]::new);
+            return IntStream.range(0, orders.size()).mapToObj(i -> checkOrder("_embedded.orders["+i+"].", orders.get(i))).flatMap(Arrays::stream).toArray(ResultMatcher[]::new);
         }
 
 
