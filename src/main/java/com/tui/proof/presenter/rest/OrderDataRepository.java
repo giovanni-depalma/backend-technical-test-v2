@@ -1,6 +1,7 @@
 package com.tui.proof.presenter.rest;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.tui.proof.core.domain.data.Order;
 import com.tui.proof.core.domain.data.PersonalInfo;
@@ -16,6 +17,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Test")
 @RepositoryRestResource(path = "test", exported = true)
-public interface OrderDataRepository extends JpaRepository<OrderData2, Long> {
+public interface OrderDataRepository extends JpaRepository<OrderData2, UUID> {
     
 }

@@ -8,9 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @Embeddable
-public class Address {
+public class Address2 {
   @NotBlank String street;
 
   @NotBlank String postcode;
