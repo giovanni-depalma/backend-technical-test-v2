@@ -99,7 +99,7 @@ public class PurchaserOrderServiceImplTest {
     @Test
     public void shouldNotUpdateWithBadPilotes() {
         UUID id = UUID.randomUUID();
-        OrderRequest request = FakeOrder.buildOrderRequest();
+        OrderRequest request = FakeOrder.buildBadOrderRequest();
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(false);
         assertThrows(BadPilotesOrderException.class, () -> service.updateOrder(id, request));
     }

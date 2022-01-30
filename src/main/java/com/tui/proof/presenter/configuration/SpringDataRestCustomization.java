@@ -1,5 +1,6 @@
 package com.tui.proof.presenter.configuration;
 
+import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -11,6 +12,7 @@ public class SpringDataRestCustomization implements RepositoryRestConfigurer {
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
-        config.exposeIdsFor(Order.class);
+        config.exposeIdsFor(Order.class, Customer.class);
     }
+
 }

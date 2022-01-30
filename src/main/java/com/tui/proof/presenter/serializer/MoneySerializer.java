@@ -12,10 +12,13 @@ import java.text.NumberFormat;
 @JsonComponent
 public class MoneySerializer extends JsonSerializer<Money> {
 
+    public String getString(Money value){
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+        return value == null ? "" : nf.format(value.getValue());
+    }
 
     @Override
     public void serialize(Money value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        NumberFormat nf = NumberFormat.getCurrencyInstance();
-        jsonGenerator.writeString(value == null ? "" : nf.format(value.getValue()));
+        jsonGenerator.writeString(getString(value));
     }
 }
