@@ -1,6 +1,7 @@
 package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Order;
+import com.tui.proof.domain.exception.OperationException;
 import com.tui.proof.service.data.OrderRequest;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
@@ -68,6 +69,13 @@ public class PurchaserOrderServiceImplTest {
     }
 
     @Test
+    public void shouldNotCreateAfterInteralError() {
+        OrderRequest request = FakeOrder.buildOrderRequest();
+        when(orderRules.allowedPilotes(request.getPilotes())).thenThrow(RuntimeException.class);
+        assertThrows(OperationException.class, () -> service.createOrder(request));
+    }
+
+    @Test
     public void shouldNotCreateOrder() {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(false);
@@ -123,5 +131,15 @@ public class PurchaserOrderServiceImplTest {
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(ItemNotFoundException.class, () -> service.updateOrder(id, request));
+    }
+
+    @Test
+    public void shouldNotUpdateAfterInternalError() {
+        Order orderAlreadyPresent = FakeOrder.buildOrder();
+        UUID id = orderAlreadyPresent.getId();
+        OrderRequest request = FakeOrder.buildOrderRequest();
+        when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
+        when(orderRepository.findById(id)).thenThrow(RuntimeException.class);
+        assertThrows(OperationException.class, () -> service.updateOrder(id, request));
     }
 }

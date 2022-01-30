@@ -81,7 +81,7 @@ public class PurchaserOrderControllerTest {
         when(orderService.updateOrder(id, request)).thenReturn(expected);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(put("/purchaserOrders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class PurchaserOrderControllerTest {
         when(orderService.updateOrder(id, request)).thenThrow(ItemNotFoundException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isNotFound());
+        this.mockMvc.perform(put("/purchaserOrders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class PurchaserOrderControllerTest {
         when(orderService.updateOrder(id, request)).thenThrow(EditingClosedOrderException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isForbidden());
+        this.mockMvc.perform(put("/purchaserOrders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isForbidden());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class PurchaserOrderControllerTest {
         when(orderService.updateOrder(id, request)).thenThrow(BadPilotesOrderException.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/orders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(put("/purchaserOrders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 
     private static class OrderMatcher {

@@ -21,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Tag(name = "Order", description = "Endpoints for Admin to view and manage orders")
 @SecurityRequirement(name = "secure-api")
 @SecurityRequirement(name = "secure-api2")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RepositoryRestResource(path = "orders")
 public interface OrderRepository extends JpaRepository<Order, UUID> {
 
@@ -43,7 +42,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Override
     @RestResource(exported = false)
-    @PreAuthorize("permitAll")
     <S extends Order> S save(S entity);
 
     @Override

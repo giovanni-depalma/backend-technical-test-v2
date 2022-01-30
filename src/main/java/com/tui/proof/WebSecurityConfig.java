@@ -26,11 +26,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                 .antMatchers("/purchaserOrders/**").permitAll()
                                 .antMatchers("/swagger-ui/**").permitAll()
                                 .antMatchers("/v3/api-docs/**").permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().hasRole("ADMIN")
                                 .and()
                                 .oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.error("Error WebSecurityConfiguration", e);
                     }
                 })
                 .csrf()
@@ -43,11 +43,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return converter;
     }
 
-    private static class RealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+    public static class RealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
         @Override
-        public Collection<GrantedAuthority> convert(Jwt jwt) {
+        public List<GrantedAuthority> convert(Jwt jwt) {
             try{
-                final Map<String, HashMap<String, ?>> resourcesAccess = (Map<String, HashMap<String, ?>>) jwt.getClaims()
+                final Map<String, Map<String, ?>> resourcesAccess = (Map<String, Map<String, ?>>) jwt.getClaims()
                         .get("resource_access");
                 final Map<String, List<String>> clientResources = (Map<String, List<String>>) resourcesAccess
                         .get("tui-gateway");
