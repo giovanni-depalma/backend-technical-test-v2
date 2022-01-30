@@ -1,6 +1,6 @@
 package com.tui.proof.presenter.rest;
 
-import com.tui.proof.core.domain.data.Order;
+import com.tui.proof.old.OrderOld;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.math.BigDecimal;
@@ -13,15 +13,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class OrderMatcher {
 
-    public static ResultMatcher[] checkOrders(List<Order> orders) {
+    public static ResultMatcher[] checkOrders(List<OrderOld> orders) {
         return IntStream.range(0, orders.size()).mapToObj(i -> checkOrder("$["+i+"].", orders.get(i))).flatMap(Arrays::stream).toArray(ResultMatcher[]::new);
     }
 
-    public static ResultMatcher[] checkOrder(Order order) {
+    public static ResultMatcher[] checkOrder(OrderOld order) {
         return checkOrder("", order);
     }
 
-    public static ResultMatcher[] checkOrder(String prefix, Order order) {
+    public static ResultMatcher[] checkOrder(String prefix, OrderOld order) {
         return new ResultMatcher[]{
                 jsonPath(prefix+"orderSummary.total").value(is(order.getOrderSummary().getTotal()), BigDecimal.class),
                 jsonPath(prefix+"orderSummary.pilotes").value(is(order.getOrderSummary().getPilotes()), Integer.class),

@@ -1,8 +1,9 @@
 package com.tui.proof.core.service;
 
-import com.tui.proof.core.domain.data.Order;
-import com.tui.proof.core.domain.data.PersonalInfo;
-import com.tui.proof.core.gateway.OrderGateway;
+import com.tui.proof.old.OrderOld;
+import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.old.core.gateway.OrderGateway;
+import com.tui.proof.old.core.service.OrderReaderImpl;
 import com.tui.proof.util.FakeCustomer;
 import com.tui.proof.util.FakeListBuilder;
 import org.junit.jupiter.api.Test;
@@ -30,18 +31,18 @@ public class OrderReaderImplTest {
 
     @Test
     public void shouldFindAll() {
-        List<Order> expected = FakeListBuilder.buildList(()-> Order.builder().build());
+        List<OrderOld> expected = FakeListBuilder.buildList(()-> OrderOld.builder().build());
         when(orderGateway.findAll()).thenReturn(expected.stream());
-        List<Order> actual = reader.findAll().toList();
+        List<OrderOld> actual = reader.findAll().toList();
         assertEquals(expected, actual);
     }
 
     @Test
     public void shouldFindById() {
         String id = "1";
-        Order expected = Order.builder().build();
+        OrderOld expected = OrderOld.builder().build();
         when(orderGateway.findById(any())).thenReturn(Optional.of(expected));
-        Order actual = reader.findById(id).orElseThrow();
+        OrderOld actual = reader.findById(id).orElseThrow();
         assertEquals(expected, actual);
     }
 
@@ -49,16 +50,16 @@ public class OrderReaderImplTest {
     public void shouldNotFindById() {
         String id = "1";
         when(orderGateway.findById(any())).thenReturn(Optional.empty());
-        Optional<Order> actual = reader.findById(id);
+        Optional<OrderOld> actual = reader.findById(id);
         assertTrue(actual.isEmpty());
     }
 
     @Test
     public void shouldFindByCustomer() {
         PersonalInfo customer = FakeCustomer.buildPersonalInfo();
-        List<Order> expected = FakeListBuilder.buildList(()-> Order.builder().build());
+        List<OrderOld> expected = FakeListBuilder.buildList(()-> OrderOld.builder().build());
         when(orderGateway.findByCustomer(customer)).thenReturn(expected.stream());
-        List<Order> actual = reader.findByCustomer(customer).toList();
+        List<OrderOld> actual = reader.findByCustomer(customer).toList();
         assertEquals(expected, actual);
     }
 }

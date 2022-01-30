@@ -5,13 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
 
+import com.tui.proof.service.TimerServiceImpl;
 import org.junit.jupiter.api.Test;
 
 public class TimerGatewayImplTest {
     
     @Test
     public void shouldReturnValidTime(){
-        TimerGatewayImpl timerGateway = new TimerGatewayImpl();
+        TimerServiceImpl timerGateway = new TimerServiceImpl();
         Instant before = Instant.now();
         Instant actual = timerGateway.now();
         Instant after = Instant.now();

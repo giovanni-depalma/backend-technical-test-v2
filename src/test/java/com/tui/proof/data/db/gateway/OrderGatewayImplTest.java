@@ -1,10 +1,12 @@
 package com.tui.proof.data.db.gateway;
 
-import com.tui.proof.core.domain.data.Order;
-import com.tui.proof.core.domain.data.PersonalInfo;
-import com.tui.proof.data.db.entities.OrderData;
-import com.tui.proof.data.db.mapper.OrderMapper;
-import com.tui.proof.data.db.repositories.OrderRepositoryJpa;
+import com.tui.proof.old.OrderOld;
+import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.old.db.entities.OrderDataOld;
+import com.tui.proof.old.db.mapper.OrderMapper;
+import com.tui.proof.old.OrderRepositoryJpa;
+import com.tui.proof.old.db.gateway.CustomerGatewayImpl;
+import com.tui.proof.old.db.gateway.OrderGatewayImpl;
 import com.tui.proof.util.FakeListBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,10 +41,10 @@ public class OrderGatewayImplTest {
     @Test
     public void shouldCreate() {
         PersonalInfo customer = PersonalInfo.builder().build();
-        Order orderToCreate = Order.builder().customer(customer).build();
-        Order expected = Order.builder().build();
+        OrderOld orderToCreate = OrderOld.builder().customer(customer).build();
+        OrderOld expected = OrderOld.builder().build();
         when(mapper.toDomain(any())).thenReturn(expected);
-        Order actual = gateway.create(orderToCreate);
+        OrderOld actual = gateway.create(orderToCreate);
         assertEquals(expected, actual);
         verify(customerGateway, times(1)).saveOrUpdate(customer);
     }
@@ -52,10 +54,10 @@ public class OrderGatewayImplTest {
     public void shouldUpdate() {
         String id = "1";
         PersonalInfo customer = PersonalInfo.builder().build();
-        Order orderToUpdate = Order.builder().id(id).customer(customer).build();
-        Order expected = Order.builder().build();
+        OrderOld orderToUpdate = OrderOld.builder().id(id).customer(customer).build();
+        OrderOld expected = OrderOld.builder().build();
         when(mapper.toDomain(any())).thenReturn(expected);
-        Order actual = gateway.update(orderToUpdate);
+        OrderOld actual = gateway.update(orderToUpdate);
         assertEquals(expected, actual);
         verify(customerGateway, times(1)).saveOrUpdate(customer);
     }
@@ -63,7 +65,7 @@ public class OrderGatewayImplTest {
     @Test
     public void shouldNotUpdate() {
         String id = "1";
-        Order orderToUpdate = Order.builder().id(id).build();
+        OrderOld orderToUpdate = OrderOld.builder().id(id).build();
         when(orderRepositoryJpa.getById(any())).thenThrow(new EntityNotFoundException());
         assertThrows(EntityNotFoundException.class, () -> gateway.update(orderToUpdate));
     }
@@ -72,23 +74,23 @@ public class OrderGatewayImplTest {
     @Test
     public void shouldFindAll() {
         int expectedSize = 10;
-        List<OrderData> repositoryMockData = FakeListBuilder.buildList(expectedSize, OrderData::new);
-        Order expectedOrder = Order.builder().build();
-        List<Order> expectedOrders = FakeListBuilder.buildList(expectedSize, () -> expectedOrder);
+        List<OrderDataOld> repositoryMockData = FakeListBuilder.buildList(expectedSize, OrderDataOld::new);
+        OrderOld expectedOrder = OrderOld.builder().build();
+        List<OrderOld> expectedOrders = FakeListBuilder.buildList(expectedSize, () -> expectedOrder);
         when(orderRepositoryJpa.findAll()).thenReturn(repositoryMockData);
         when(mapper.toDomain(any())).thenReturn(expectedOrder);
-        List<Order> actualOrders = gateway.findAll().toList();
+        List<OrderOld> actualOrders = gateway.findAll().toList();
         assertEquals(expectedOrders, actualOrders);
     }
 
     @Test
     public void shouldFindById() {
         String id = "1";
-        OrderData repositoryMockData = new OrderData();
-        Order expectedOrder = Order.builder().build();
+        OrderDataOld repositoryMockData = new OrderDataOld();
+        OrderOld expectedOrder = OrderOld.builder().build();
         when(orderRepositoryJpa.findById(any())).thenReturn(Optional.of(repositoryMockData));
         when(mapper.toDomain(any())).thenReturn(expectedOrder);
-        Optional<Order> actual = gateway.findById(id);
+        Optional<OrderOld> actual = gateway.findById(id);
         assertEquals(expectedOrder, actual.orElseThrow());
     }
 
@@ -96,20 +98,20 @@ public class OrderGatewayImplTest {
     public void shouldNotFindById() {
         String id = "1";
         when(orderRepositoryJpa.findById(any())).thenReturn(Optional.empty());
-        Optional<Order> actual = gateway.findById(id);
+        Optional<OrderOld> actual = gateway.findById(id);
         assertTrue(actual.isEmpty());
     }
 
     @Test
     public void shouldFindByCustomer() {
         int expectedSize = 10;
-        List<OrderData> repositoryMockData = FakeListBuilder.buildList(expectedSize, OrderData::new);
-        Order expectedOrder = Order.builder().build();
-        List<Order> expectedOrders = FakeListBuilder.buildList(expectedSize, () -> expectedOrder);
-        when(orderRepositoryJpa.findAll(ArgumentMatchers.<Example<OrderData>>any())).thenReturn(repositoryMockData);
+        List<OrderDataOld> repositoryMockData = FakeListBuilder.buildList(expectedSize, OrderDataOld::new);
+        OrderOld expectedOrder = OrderOld.builder().build();
+        List<OrderOld> expectedOrders = FakeListBuilder.buildList(expectedSize, () -> expectedOrder);
+        when(orderRepositoryJpa.findAll(ArgumentMatchers.<Example<OrderDataOld>>any())).thenReturn(repositoryMockData);
         when(mapper.toDomain(any())).thenReturn(expectedOrder);
         PersonalInfo customer = PersonalInfo.builder().build();
-        List<Order> actualOrders = gateway.findByCustomer(customer).toList();
+        List<OrderOld> actualOrders = gateway.findByCustomer(customer).toList();
         assertEquals(expectedOrders, actualOrders);
     }
 }

@@ -1,10 +1,13 @@
 package com.tui.proof.core.service;
 
-import com.tui.proof.core.domain.data.*;
-import com.tui.proof.core.domain.exception.BadPilotesOrderException;
-import com.tui.proof.core.domain.rules.OrderRules;
-import com.tui.proof.core.gateway.OrderGateway;
-import com.tui.proof.core.gateway.TimerGateway;
+import com.tui.proof.domain.entities.Money;
+import com.tui.proof.old.OrderOld;
+import com.tui.proof.domain.entities.OrderRequest;
+import com.tui.proof.domain.exception.BadPilotesOrderException;
+import com.tui.proof.domain.rules.OrderRules;
+import com.tui.proof.old.core.gateway.OrderGateway;
+import com.tui.proof.service.TimerService;
+import com.tui.proof.old.core.service.OrderCreatorImpl;
 import com.tui.proof.util.FakeOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,10 +28,10 @@ public class OrderCreatorImplTest {
     private OrderRules orderRules;
 
     @Mock
-    private TimerGateway timerGateway;
+    private TimerService timerGateway;
 
     @Captor
-    ArgumentCaptor<Order> orderCaptor;
+    ArgumentCaptor<OrderOld> orderCaptor;
 
     @InjectMocks
     private OrderCreatorImpl orderCreator;
@@ -36,18 +39,18 @@ public class OrderCreatorImplTest {
     @Test
     public void shouldCreateOrder() {
         OrderRequest request = FakeOrder.buildOrderRequest();
-        Order expectedOrder = FakeOrder.buildOrder(request);
+        OrderOld expectedOrder = FakeOrder.buildOrder(request);
         Instant now = expectedOrder.getOrderSummary().getCreatedAt();
         when(timerGateway.now()).thenReturn(now);
-        when(orderRules.calculateTotal(request.getPilotes())).thenReturn(expectedOrder.getOrderSummary().getTotal());
+        when(orderRules.calculateTotal(request.getPilotes())).thenReturn(new Money(expectedOrder.getOrderSummary().getTotal()));
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
         when(orderRules.calculateEditableUntil(now)).thenReturn(expectedOrder.getOrderSummary().getEditableUntil());
         when(orderGateway.create(any())).thenReturn(expectedOrder);
-        Order savedOrder = orderCreator.createOrder(request);
+        OrderOld savedOrder = orderCreator.createOrder(request);
         assertEquals(expectedOrder, savedOrder);
         //verify server side generated fields
         verify(orderGateway, times(1)).create(orderCaptor.capture());
-        Order orderSendedToGateway = orderCaptor.getValue();
+        OrderOld orderSendedToGateway = orderCaptor.getValue();
         assertEquals(expectedOrder.getOrderSummary().getCreatedAt(), orderSendedToGateway.getOrderSummary().getCreatedAt() );
         assertEquals(expectedOrder.getOrderSummary().getEditableUntil() , orderSendedToGateway.getOrderSummary().getEditableUntil() );
         assertEquals(expectedOrder.getOrderSummary().getTotal(), orderSendedToGateway.getOrderSummary().getTotal() );

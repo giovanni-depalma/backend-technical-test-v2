@@ -1,17 +1,17 @@
 package com.tui.proof.util;
 
 import com.github.javafaker.Faker;
-import com.tui.proof.core.domain.data.Customer;
-import com.tui.proof.core.domain.data.PersonalInfo;
-import com.tui.proof.data.db.entities.CustomerData;
+import com.tui.proof.old.CustomerOld;
+import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.old.db.entities.CustomerDataOld;
 
 import java.util.Random;
 
 public class FakeCustomer {
 
-    public static Customer buildCustomer() {
+    public static CustomerOld buildCustomer() {
         Faker faker = new Faker(new Random());
-        return Customer.builder().personalInfo(buildPersonalInfo(faker)).id(faker.number().numberBetween(1,100)).build();
+        return CustomerOld.builder().personalInfo(buildPersonalInfo(faker)).id(faker.number().numberBetween(1,100)).build();
     }
 
     public static PersonalInfo buildPersonalInfo() {
@@ -19,10 +19,10 @@ public class FakeCustomer {
         return buildPersonalInfo(faker);
     }
 
-    public static CustomerData buildCustomerData(){
+    public static CustomerDataOld buildCustomerData(){
         Faker faker = new Faker(new Random());
         String email = faker.bothify("????##@gmail.com");
-        CustomerData customerData = new CustomerData();
+        CustomerDataOld customerData = new CustomerDataOld();
         customerData.setEmail(email);
         customerData.setFirstName(faker.name().firstName());
         customerData.setLastName(faker.name().lastName());

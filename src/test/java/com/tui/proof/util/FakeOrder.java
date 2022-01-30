@@ -1,8 +1,11 @@
 package com.tui.proof.util;
 
 import com.github.javafaker.Faker;
-import com.tui.proof.core.domain.data.*;
-import com.tui.proof.data.db.entities.OrderData;
+import com.tui.proof.old.db.entities.OrderDataOld;
+import com.tui.proof.old.OrderOld;
+import com.tui.proof.domain.entities.OrderRequest;
+import com.tui.proof.domain.entities.OrderSummary;
+import com.tui.proof.domain.entities.PersonalInfo;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -28,9 +31,9 @@ public class FakeOrder {
     }
 
 
-    public static OrderData buildOrderData() {
+    public static OrderDataOld buildOrderData() {
         Faker faker = new Faker(new Random());
-        OrderData orderData = new OrderData();
+        OrderDataOld orderData = new OrderDataOld();
         orderData.setCreatedAt(fakeCreatedAt(faker));
         orderData.setDeliveryCity(faker.address().city());
         orderData.setDeliveryCountry(faker.address().country());
@@ -45,7 +48,7 @@ public class FakeOrder {
         return orderData;
     }
 
-    public static Order buildOrder() {
+    public static OrderOld buildOrder() {
         Faker faker = new Faker(new Random());
         PersonalInfo customer = FakeCustomer.buildPersonalInfo();
         Instant createdAt = fakeCreatedAt(faker);
@@ -54,10 +57,10 @@ public class FakeOrder {
         OrderSummary orderSummary = OrderSummary.builder().editableUntil(editableUntil).createdAt(createdAt)
                 .total(total).pilotes(fakePilotes(faker)).build();
         String id = String.valueOf(faker.number().randomNumber());
-        return Order.builder().id(id).customer(customer).orderSummary(orderSummary).delivery(FakeAddress.buildAddress()).build();
+        return OrderOld.builder().id(id).customer(customer).orderSummary(orderSummary).delivery(FakeAddress.buildAddress()).build();
     }
 
-    public static Order buildOrder(OrderRequest request) {
+    public static OrderOld buildOrder(OrderRequest request) {
         Faker faker = new Faker(new Random());
         Instant createdAt = fakeCreatedAt(faker);
         Instant editableUntil = fakeEditableUntil(faker);
@@ -65,15 +68,15 @@ public class FakeOrder {
         OrderSummary orderSummary = OrderSummary.builder().editableUntil(editableUntil).createdAt(createdAt)
                 .total(total).pilotes(request.getPilotes()).build();
         String id = String.valueOf(faker.number().randomNumber());
-        return Order.builder().id(id).customer(request.getCustomer()).orderSummary(orderSummary).delivery(request.getDelivery()).build();
+        return OrderOld.builder().id(id).customer(request.getCustomer()).orderSummary(orderSummary).delivery(request.getDelivery()).build();
     }
 
-    public static Order buildOrderWithId(String id, Instant createdAt, Instant editableUntil, OrderRequest request) {
+    public static OrderOld buildOrderWithId(String id, Instant createdAt, Instant editableUntil, OrderRequest request) {
         Faker faker = new Faker(new Random());
         BigDecimal total = BigDecimal.valueOf(faker.number().randomDouble(2, 1, 100));
         OrderSummary orderSummary = OrderSummary.builder().editableUntil(editableUntil).createdAt(createdAt)
                 .total(total).pilotes(request.getPilotes()).build();
-        return Order.builder().id(id).customer(request.getCustomer()).orderSummary(orderSummary).delivery(request.getDelivery()).build();
+        return OrderOld.builder().id(id).customer(request.getCustomer()).orderSummary(orderSummary).delivery(request.getDelivery()).build();
     }
 
     public static OrderRequest buildOrderRequest() {

@@ -3,7 +3,8 @@ package com.tui.proof;
 import java.math.BigDecimal;
 import java.util.Set;
 
-import com.tui.proof.core.domain.rules.OrderRules;
+import com.tui.proof.domain.entities.Money;
+import com.tui.proof.domain.rules.OrderRules;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,6 @@ public class OrdersConfiguration {
 
     @Bean
     public OrderRules createRules(){
-        return new OrderRules(price, orderableQuantity, closedAfterSeconds);
+        return new OrderRules(new Money(price), orderableQuantity, closedAfterSeconds);
     }
 }

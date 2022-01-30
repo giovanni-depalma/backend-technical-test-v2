@@ -1,31 +1,17 @@
 package com.tui.proof.data.db.gateway;
 
-import com.tui.proof.core.domain.data.Customer;
-import com.tui.proof.core.domain.data.PersonalInfo;
-import com.tui.proof.data.db.entities.CustomerData;
-import com.tui.proof.data.db.mapper.CustomerMapper;
-import com.tui.proof.data.db.repositories.CustomerRepositoryJpa;
 import com.tui.proof.util.FakeListBuilder;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Example;
-
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
 public class CustomerGatewayImplTest {
-
+/*
     @InjectMocks
     private CustomerGatewayImpl gateway;
 
@@ -102,5 +88,5 @@ public class CustomerGatewayImplTest {
         assertEquals(expected, actual);
     }
 
- 
+ */
 }

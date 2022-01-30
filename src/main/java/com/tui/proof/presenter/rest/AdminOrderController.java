@@ -1,38 +1,33 @@
 package com.tui.proof.presenter.rest;
 
-import com.tui.proof.core.domain.data.Order;
-import com.tui.proof.core.domain.data.PersonalInfo;
-import com.tui.proof.core.domain.exception.ItemNotFoundException;
-import com.tui.proof.core.service.OrderReader;
+import com.tui.proof.domain.entities.Order;
+import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.service.AdminOrderService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.List;
 
-import java.util.stream.Stream;
 
+@Tag(name = "Order", description = "Endpoints for Admin to view and manage orders")
+@SecurityRequirement(name = "secure-api")
+@SecurityRequirement(name = "secure-api2")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RestController
-@RequestMapping("/admin/orders")
-@SecurityRequirement(name = "secure-api")
+@RequestMapping("orders")
 @AllArgsConstructor
 public class AdminOrderController {
-    private final OrderReader orderReader;
-
-    @GetMapping
-    public Stream<Order> findAll() {
-        return orderReader.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public Order getById(@PathVariable String id) {
-        return orderReader.findById(id).orElseThrow(ItemNotFoundException::new);
-    }
+    private AdminOrderService orderService;
 
     @PostMapping("/findByCustomer")
-    public Stream<Order> findByCustomer(@RequestBody PersonalInfo request) {
-        return orderReader.findByCustomer(request);
+    public List<Order> findByCustomer(@RequestBody PersonalInfo request) {
+        return orderService.findByCustomer(request);
     }
 
 }

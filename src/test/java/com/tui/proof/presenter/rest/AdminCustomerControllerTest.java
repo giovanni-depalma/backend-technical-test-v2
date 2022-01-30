@@ -1,37 +1,17 @@
 package com.tui.proof.presenter.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tui.proof.core.domain.data.Customer;
-import com.tui.proof.core.domain.data.PersonalInfo;
-import com.tui.proof.core.service.CustomerReader;
-import com.tui.proof.presenter.rest.AdminCustomerController;
-import com.tui.proof.util.FakeCustomer;
 import com.tui.proof.util.FakeListBuilder;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AdminCustomerController.class)
+//@WebMvcTest(AdminCustomerController.class)
 @WithMockUser(username="admin",roles={"ADMIN"})
 public class AdminCustomerControllerTest {
-
+/*
     @Autowired
     private MockMvc mockMvc;
 
@@ -93,5 +73,5 @@ public class AdminCustomerControllerTest {
         when(customerReader.findById(id)).thenReturn(Optional.empty());
         this.mockMvc.perform(get("/admin/customers/"+id)).andExpect(status().isNotFound());
     }
-
+*/
 }

@@ -1,13 +1,15 @@
 package com.tui.proof.core.service;
 
-import com.tui.proof.core.domain.data.Order;
-import com.tui.proof.core.domain.data.OrderRequest;
-import com.tui.proof.core.domain.exception.BadPilotesOrderException;
-import com.tui.proof.core.domain.exception.EditingClosedOrderException;
-import com.tui.proof.core.domain.exception.ItemNotFoundException;
-import com.tui.proof.core.domain.rules.OrderRules;
-import com.tui.proof.core.gateway.OrderGateway;
-import com.tui.proof.core.gateway.TimerGateway;
+import com.tui.proof.domain.entities.Money;
+import com.tui.proof.old.OrderOld;
+import com.tui.proof.domain.entities.OrderRequest;
+import com.tui.proof.domain.exception.BadPilotesOrderException;
+import com.tui.proof.domain.exception.EditingClosedOrderException;
+import com.tui.proof.domain.exception.ItemNotFoundException;
+import com.tui.proof.domain.rules.OrderRules;
+import com.tui.proof.old.core.gateway.OrderGateway;
+import com.tui.proof.service.TimerService;
+import com.tui.proof.old.core.service.OrderUpdaterImpl;
 import com.tui.proof.util.FakeOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,27 +35,27 @@ public class OrderUpdaterImplTest {
     private OrderRules orderRules;
 
     @Mock
-    private TimerGateway timerGateway;
+    private TimerService timerGateway;
 
     @Captor
-    ArgumentCaptor<Order> orderCaptor;
+    ArgumentCaptor<OrderOld> orderCaptor;
 
     @Test
     public void shouldUpdateOrderUntilTheEnd() {
-        Order orderAlreadyPresent = FakeOrder.buildOrder();
+        OrderOld orderAlreadyPresent = FakeOrder.buildOrder();
         String id = orderAlreadyPresent.getId();
         OrderRequest request = FakeOrder.buildOrderRequest();
-        Order expectedOrder = FakeOrder.buildOrderWithId(id, orderAlreadyPresent.getOrderSummary().getCreatedAt(), orderAlreadyPresent.getOrderSummary().getEditableUntil(), request);
+        OrderOld expectedOrder = FakeOrder.buildOrderWithId(id, orderAlreadyPresent.getOrderSummary().getCreatedAt(), orderAlreadyPresent.getOrderSummary().getEditableUntil(), request);
         when(timerGateway.now()).thenReturn(expectedOrder.getOrderSummary().getEditableUntil());
-        when(orderRules.calculateTotal(request.getPilotes())).thenReturn(expectedOrder.getOrderSummary().getTotal());
+        when(orderRules.calculateTotal(request.getPilotes())).thenReturn(new Money(expectedOrder.getOrderSummary().getTotal()));
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
         when(orderGateway.findById(any())).thenReturn(Optional.of(orderAlreadyPresent));
         when(orderGateway.update(any())).thenReturn(expectedOrder);
-        Order savedOrder = orderUpdater.updateOrder(id, request);
+        OrderOld savedOrder = orderUpdater.updateOrder(id, request);
         assertEquals(expectedOrder, savedOrder);
         //verify server side generated fields
         verify(orderGateway, times(1)).update(orderCaptor.capture());
-        Order orderSendToGateway = orderCaptor.getValue();
+        OrderOld orderSendToGateway = orderCaptor.getValue();
         assertEquals(expectedOrder.getOrderSummary().getCreatedAt(), orderSendToGateway.getOrderSummary().getCreatedAt());
         assertEquals(expectedOrder.getOrderSummary().getEditableUntil(), orderSendToGateway.getOrderSummary().getEditableUntil());
         assertEquals(expectedOrder.getOrderSummary().getTotal(), orderSendToGateway.getOrderSummary().getTotal());
@@ -69,7 +71,7 @@ public class OrderUpdaterImplTest {
 
     @Test
     public void shouldNotUpdateAfterIsClosed() {
-        Order orderAlreadyPresent = FakeOrder.buildOrder();
+        OrderOld orderAlreadyPresent = FakeOrder.buildOrder();
         String id = orderAlreadyPresent.getId();
         OrderRequest request = FakeOrder.buildOrderRequest();
         Instant timeAfterClose = orderAlreadyPresent.getOrderSummary().getEditableUntil().plusNanos(1L);

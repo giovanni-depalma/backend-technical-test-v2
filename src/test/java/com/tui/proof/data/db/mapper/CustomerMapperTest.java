@@ -1,8 +1,9 @@
 package com.tui.proof.data.db.mapper;
 
-import com.tui.proof.core.domain.data.Customer;
-import com.tui.proof.core.domain.data.PersonalInfo;
-import com.tui.proof.data.db.entities.CustomerData;
+import com.tui.proof.old.CustomerOld;
+import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.old.db.entities.CustomerDataOld;
+import com.tui.proof.old.db.mapper.CustomerMapper;
 import com.tui.proof.util.FakeCustomer;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ public class CustomerMapperTest {
     @Test
     public void shouldMapToPersonalInfo() {
         CustomerMapper mapper = new CustomerMapper();
-        CustomerData customerData = FakeCustomer.buildCustomerData();
+        CustomerDataOld customerData = FakeCustomer.buildCustomerData();
         PersonalInfo actual = mapper.toPersonalInfo(customerData);
         assertAll(
                 () -> assertEquals(customerData.getFirstName(), actual.getFirstName()),
@@ -27,8 +28,8 @@ public class CustomerMapperTest {
     @Test
     public void shouldMapToDomain() {
         CustomerMapper mapper = new CustomerMapper();
-        CustomerData customerData = FakeCustomer.buildCustomerData();
-        Customer actual = mapper.toDomain(customerData);
+        CustomerDataOld customerData = FakeCustomer.buildCustomerData();
+        CustomerOld actual = mapper.toDomain(customerData);
         PersonalInfo actualPersonalInfo = actual.getPersonalInfo();
         assertAll(
                 () -> assertEquals(customerData.getId(), actual.getId()),
@@ -41,7 +42,7 @@ public class CustomerMapperTest {
     @Test
     public void shouldPopulateData() {
         CustomerMapper mapper = new CustomerMapper();
-        CustomerData customerData = new CustomerData();
+        CustomerDataOld customerData = new CustomerDataOld();
         PersonalInfo personalInfo = FakeCustomer.buildPersonalInfo();
 
         mapper.populateData(customerData, personalInfo);
