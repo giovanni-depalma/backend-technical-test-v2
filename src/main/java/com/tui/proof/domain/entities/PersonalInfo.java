@@ -13,6 +13,7 @@ import lombok.*;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class PersonalInfo {
     @Email
     @Size(min = 1, max = 100)

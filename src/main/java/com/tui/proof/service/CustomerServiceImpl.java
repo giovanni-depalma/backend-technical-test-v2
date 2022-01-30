@@ -1,8 +1,8 @@
 package com.tui.proof.service;
 
-import com.tui.proof.repositories.Customer2RepositoryJpa;
 import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.repositories.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @Slf4j
 @AllArgsConstructor
 public class CustomerServiceImpl implements CustomerService{
-    private final Customer2RepositoryJpa customerRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public Customer findByEmailAndSave(PersonalInfo personalInfo) {

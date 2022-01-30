@@ -20,20 +20,5 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 public class OpenApiConfiguration {
 
-    /*
-    @Bean
-    public GroupedOpenApi store2OpenApi() {
-        String paths[] = { "/orders" };
-        return GroupedOpenApi.builder().group("public").pathsToMatch(paths)
-                .build();
-    }
-
-    @Bean
-    public GroupedOpenApi storeOpenApi() {
-        String paths[] = { "/admin/**" };
-        return GroupedOpenApi.builder().group("admin").pathsToMatch(paths)
-                .build();
-    }*/
-
    
 }

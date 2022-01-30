@@ -1,7 +1,7 @@
 package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.entities.OrderRequest;
+import com.tui.proof.service.data.OrderRequest;
 
 import java.util.UUID;
 

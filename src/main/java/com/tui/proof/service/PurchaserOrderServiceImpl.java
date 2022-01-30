@@ -5,12 +5,12 @@ import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;
 import com.tui.proof.domain.rules.OrderRules;
-import com.tui.proof.repositories.Order2DataRepository;
+import com.tui.proof.repositories.OrderRepository;
+import com.tui.proof.service.data.OrderRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -18,7 +18,7 @@ import java.util.UUID;
 @Slf4j
 @AllArgsConstructor
 public class PurchaserOrderServiceImpl implements PurchaserOrderService{
-    private final Order2DataRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final OrderRules orderRules;
     private final TimerService timerGateway;
     private final CustomerService customerService;

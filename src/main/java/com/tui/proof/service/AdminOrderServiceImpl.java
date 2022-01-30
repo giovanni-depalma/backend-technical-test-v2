@@ -3,7 +3,7 @@ package com.tui.proof.service;
 import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.entities.PersonalInfo;
-import com.tui.proof.repositories.Order2DataRepository;
+import com.tui.proof.repositories.OrderRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class AdminOrderServiceImpl implements AdminOrderService{
-    private final Order2DataRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public List<Order> findByCustomer(PersonalInfo personalInfo) {

@@ -1,8 +1,0 @@
-spring:
-  main:
-    orders: 
-      orderable_quantity: 
-      - 5
-      - 10
-      - 15
-      price: 1.33

@@ -17,17 +17,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class OrderRulesTest {
 
-    private final BigDecimal priceForPilote = new BigDecimal("1.33");
+    private final Money priceForPilote = new Money(new BigDecimal("1.33"));
     private final Set<Integer> allowedPilotes = Set.of(5, 10, 15);
     private final long closeOrderAfterSeconds = 5*60;
-    private final OrderRules rules = new OrderRules(new Money(priceForPilote), allowedPilotes,closeOrderAfterSeconds);
+    private final OrderRules rules = new OrderRules(priceForPilote, allowedPilotes,closeOrderAfterSeconds);
 
 
     @TestFactory
     public Stream<DynamicTest> shouldCalculateTotal() {
         return allowedPilotes.stream().map(pilotes -> DynamicTest.dynamicTest("Test Calculate Totals for pilots: " + pilotes, () -> {
-            BigDecimal expected = priceForPilote.multiply(BigDecimal.valueOf(pilotes));
-            BigDecimal actual = rules.calculateTotal(pilotes).getValue();
+            Money expected = new Money(priceForPilote.getValue().multiply(BigDecimal.valueOf(pilotes)));
+            Money actual = rules.calculateTotal(pilotes);
             assertEquals(expected, actual);
         }));
     }
