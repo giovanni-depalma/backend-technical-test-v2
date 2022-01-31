@@ -247,13 +247,13 @@ In particular:
 
 - street: max 100 characters
 - postcode of 5 number: /^\d{5}$/
-- city: max 50 characters
-- country: max 50 characters
+- city: max 100 characters
+- country: max 100 characters
 
 **Person**
 
 - email must be valid and max 100 characters
-- phone numbers have several standards according to the country, so is a simple string (max 20 characters)
+- phone numbers have several standards according to the country, so is a simple string (max 30 characters)
 - firstName: max 100 characters
 - lastName: 100 characters
 

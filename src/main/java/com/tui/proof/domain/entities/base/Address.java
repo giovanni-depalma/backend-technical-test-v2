@@ -23,12 +23,12 @@ public class Address {
     @Column(length = 5, nullable = false)
     @NotBlank String postcode;
 
-    @Size(min = 1, max = 50)
-    @Column(length = 50, nullable = false)
+    @Size(min = 1, max = 100)
+    @Column(length = 100, nullable = false)
     @NotBlank String city;
 
-    @Size(min = 1, max = 50)
-    @Column(length = 50, nullable = false)
+    @Size(min = 1, max = 100)
+    @Column(length = 100, nullable = false)
     @NotBlank String country;
 
 
