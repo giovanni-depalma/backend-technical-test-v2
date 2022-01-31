@@ -29,5 +29,15 @@
       "name": "spring.main.security.white-list",
       "type": "java.lang.String",
       "description": "List of public endpoint."
+    },
+    {
+      "name": "is.external-base-url",
+      "type": "java.lang.String",
+      "description": "base url of Identity Server accessing outside the network."
+    },
+    {
+      "name": "is.external-realm-url",
+      "type": "java.lang.String",
+      "description": "realm url of Identity Server accessing outside the network."
     }
   ] }

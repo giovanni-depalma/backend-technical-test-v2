@@ -11,6 +11,8 @@ is:
   realm-url: ${is.base-url}/realms/${is.realm}
   client-id: tui-gateway
   client-secret: 8JNumTbP0pj8iYoCNgrycb3srA4jBHly
+  external-base-url: ${EXTERNAL_PROTOCOL:http}://${EXTERNAL_HOST:localhost}:${EXTERNAL_PORT:8080}/auth
+  external-realm-url: ${is.external-base-url}/realms/${is.realm}
 
 spring:
   data:

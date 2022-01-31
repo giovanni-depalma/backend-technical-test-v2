@@ -87,3 +87,4 @@ atlassian-ide-plugin.xml
 */.factorypath
 
 .vscode
+*/node_modules

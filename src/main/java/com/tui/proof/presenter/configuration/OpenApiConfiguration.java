@@ -13,8 +13,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "TUI Pilotes API", version = "1.0"))
 @SecurityScheme(name = "secure-api", type = SecuritySchemeType.OAUTH2, flows = @OAuthFlows(
-    password = @OAuthFlow(authorizationUrl = "${is.realm-url}/protocol/openid-connect/auths", 
-    tokenUrl = "${is.realm-url}/protocol/openid-connect/token")
+    password = @OAuthFlow(authorizationUrl = "${is.external-realm-url}/protocol/openid-connect/auths",
+    tokenUrl = "${is.external-realm-url}/protocol/openid-connect/token")
     ), in = SecuritySchemeIn.HEADER)
 @SecurityScheme(name = "secure-api2", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT" , in = SecuritySchemeIn.HEADER)
 

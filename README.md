@@ -273,3 +273,14 @@ Dockerfile it's multistage, to achieve two purposes:
 
 - best size for the final image
 - simulate a pipeline, including a "Test Stage" 
+
+#### Integration Test
+
+In the folder testing-apis-with-cypress there are simple APIs integration tests with Cypress.
+
+To install and start the tests execute the commands:
+
+```
+yarn install
+yarn test
+```
