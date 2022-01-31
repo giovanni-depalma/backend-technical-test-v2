@@ -255,10 +255,16 @@ In particular:
 
 
 
-### Docker-Compose
+### Docker
 
-Docker compose starts 2 services
+docker-compose starts 2 services
 - identity server
 - the app
 
 You can only start "identity service" during development to test security.
+
+#### Dockerfile
+Dockerfile it's multistage, to achieve two purposes:
+
+- best size for the final image
+- simulate a pipeline, including a "Test Stage" 
