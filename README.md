@@ -215,3 +215,11 @@ spring:
 
 It's also configured the security, with "oauth2 resourceserver"
 If you want to start the application without security, you can use "dev-unsecured" profile.
+
+### Docker-Compose
+
+Docker compose starts 2 services
+- identity server
+- the app
+
+You can only start "identity service" during development to test security.
