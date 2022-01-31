@@ -18,6 +18,7 @@ RUN mkdir target/extracted \
 
 
 FROM openjdk:17-slim AS final
+USER 1000
 WORKDIR /app
 ARG EXTRACTED=/workspace/target/extracted
 COPY --from=build ${EXTRACTED}/dependencies/ ./
