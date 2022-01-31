@@ -10,6 +10,6 @@ public class FakeAddress {
     public static Address buildAddress() {
         Faker faker = new Faker(new Random());
         return Address.builder().city(faker.address().city()).country(faker.address().country())
-                .postcode(faker.address().zipCode()).street(faker.address().streetAddress()).build();
+                .postcode(faker.number().digits(5)).street(faker.address().streetAddress()).build();
     }
 }

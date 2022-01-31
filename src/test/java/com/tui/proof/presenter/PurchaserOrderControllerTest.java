@@ -27,6 +27,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,7 +68,7 @@ public class PurchaserOrderControllerTest {
         when(orderService.updateOrder(id, request)).thenReturn(expected);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(put("/purchaserOrders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
+        this.mockMvc.perform(put("/purchaserOrders/"+id).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andDo(print()).andExpect(status().isOk())
                 .andExpectAll(OrderMatcher.checkOrder(expected));
     }
 

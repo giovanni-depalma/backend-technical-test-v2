@@ -42,7 +42,7 @@ If you use an invalid id you will get a 404 error!
   "pilotes": 15,
   "delivery": {
     "street": "Poco Mas Drive Change Alternative",
-    "postcode": "2420 Alt",
+    "postcode": "24206",
     "city": "Frisco Change Alt",
     "country": "TX Change Alt"
   },
@@ -185,6 +185,11 @@ Decision must be taken based on requirement, in this simple case both choices we
 
 To manage the Order-Customer relationship and avoid multiple read query the annotation "NamedEntityGraph" was used.
 
+One of the business rules is to prevent an order from being changed after 5 minutes.
+
+**During the creation phase, the instant until it is possible to modify the order is set**
+
+
 #### Service
 It's implements the business service using entities and repository.
 The order management is divided into 2 services:
@@ -243,7 +248,7 @@ In particular:
 - street: max 100 characters
 - postcode of 5 number: /^\d{5}$/
 - city: max 50 characters
-- country: max 10 characters
+- country: max 50 characters
 
 **Person**
 
