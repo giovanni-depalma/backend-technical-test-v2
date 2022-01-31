@@ -1,6 +1,7 @@
 package com.tui.proof.presenter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tui.proof.config.SecurityParameters;
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PurchaserOrderController.class)
-@Import(PurchaserOrderMapper.class)
+@Import({PurchaserOrderMapper.class, SecurityParameters.class})
 public class PurchaserOrderControllerTest {
     @Autowired
     private MockMvc mockMvc;

@@ -1,6 +1,7 @@
 package com.tui.proof.presenter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tui.proof.config.SecurityParameters;
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.service.AdminOrderService;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AdminOrderController.class)
+@Import(SecurityParameters.class)
 public class OrderControllerNotAuthenticatedTest {
 
     @Autowired
