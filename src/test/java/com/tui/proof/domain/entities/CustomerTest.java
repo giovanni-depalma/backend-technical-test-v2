@@ -2,6 +2,7 @@ package com.tui.proof.domain.entities;
 
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;

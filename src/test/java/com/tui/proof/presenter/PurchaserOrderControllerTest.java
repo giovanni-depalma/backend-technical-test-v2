@@ -2,7 +2,7 @@ package com.tui.proof.presenter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;

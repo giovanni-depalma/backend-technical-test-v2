@@ -1,14 +1,15 @@
-package com.tui.proof.domain.entities;
+package com.tui.proof.domain.entities.base;
 
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 import org.junit.jupiter.api.Test;
 
-public class MoneyTest {
+public class PersonalInfoTest {
 
     @Test
     public void shouldToString() {
-        ToStringVerifier.forClass(Money.class)
+        ToStringVerifier.forClass(PersonalInfo.class)
                 .withClassName(NameStyle.SIMPLE_NAME)
                 .verify();
     }

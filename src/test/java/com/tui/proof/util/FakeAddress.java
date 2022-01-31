@@ -1,7 +1,7 @@
 package com.tui.proof.util;
 
 import com.github.javafaker.Faker;
-import com.tui.proof.domain.entities.Address;
+import com.tui.proof.domain.entities.base.Address;
 
 import java.util.Random;
 

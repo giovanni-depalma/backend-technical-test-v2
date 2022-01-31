@@ -34,7 +34,7 @@ track the order id for next updates
 
 #### Update your order
 Retrieve the saved id and update your order with PUT /orders/{id}.
-You have 5 minutes or you will get a 409 error!
+You have 5 minutes, or you will get a 409 error!
 If you use an invalid id you will get a 404 error!
 
 ```json
@@ -113,11 +113,11 @@ The project uses the following stack:
 - JDK 17
 - Lombok
 - Spring Boot 2.6.2
-- Spring Web
+- Spring Web / Spring Web MVC
 - Spring Data JPA
 - Spring Data Rest
 - Spring Security
-- Keycloak as Identity Server
+- Identity Server (Keycloak)
 
 The API (in my interpretation) are dedicated to two main actors:
 
@@ -128,22 +128,18 @@ Spring Data Rest allowed to expose a good API for the administrator, reducing th
 This will allow for easier maintenance (and evolution) of the code.
 On the other hand, it reduces the layers by directly exposing the model but this was found to be acceptable, especially for "secured" API.
 
-To these bees are added those of 2 controllers:
-    - AdminOrderController: manages the search for customer
-    - PurchaserOrderController: manages the creation and updating of an order
-
-### Money
+#### Money
 An application must always manage money carefully. Libraries as "Joda-Money" or "Moneta" were evaluated but considered excessive.
 A Money class was therefore created, as a simple wrapper of a BigDecimal.
 
-### Time
+#### Time
 The application manages timetables with the Instant class, and serialize the date in UTC 
 
 ```
 2022-01-30T21:47:00.173464Z
 ```
 
-### Security
+#### Security
 The application it's configured as "resource server" and interact with an Identity Server (Keycloak).
 The docker-compose launch a preconfigured instance of Keycloak, with the "tui-pilotes" realm.
 The following roles are also configured:
@@ -156,43 +152,66 @@ The following users have been configured for testing
 - tui-customer/tui-customer (customer)
 - tui-all/tui-all (admin,customer)
 
+NOTE: the configuration of the identity server is development oriented, do not use it directly in production!
 
+### The Project
+The project it's logically divided in:
 
+- domain
+- presenter
+- repositories 
+- service: business logic
 
+#### Domain
+It contains the entities and the business rules (like for example the time frame in which the order can be changed)
+The main entities are "Order" and "Customer", are identified by "uuid" and are composed by base objects (like Address, Money, PersonalInfo).
 
+There are many topics about using "uuid" vs "Serial", with advantages and disadvantages.
+Decision must be taken based on requirement, in this simple case both choices were acceptable.
 
-```json
-{
-  "firstName": "John",
-  "lastName": "Smith",
-  "age": 25
-}
+To manage the Order-Customer relationship and avoid multiple read query the annotation "NamedEntityGraph" was used.
+
+#### Service
+It's implements the business service using entities and repository.
+The order management is divided into 2 services:
+
+- AdminOrderService: management of the admin's use cases
+- PurchaserOrderService: management of the purchaser's use cases
+
+#### Repositories
+It contains the repositories:
+
+- CustomerRepository
+- OrderRepository: some methods exposed by Spring Data Rest:
+
+#### Presenter
+It contains "Controller", "Serializer", "Rest Configuration" and any mapping objects.
+
+In addition to the exposed endpoints by "Spring Data Rest" there are 2 controllers:
+
+- AdminOrderController: manages the search for customer
+- PurchaserOrderController: manages the creation and updating of an order. A specific object (PurchaserOrder) is returned. 
+There are no big differences between Order and PurchaserOrder but allow for different evolutions.
+
+### Configuration
+
+The configuration in "application.yml" allows to configure:
+
+- a list of "allowed_quantity"
+- price in € for a single pilotes
+- time interval in seconds to change the order
+
+```yml
+spring:
+    main:
+    orders:
+        allowed_quantity:
+        - 5
+        - 10
+        - 15
+        price: "1.33"
+        closed_after_seconds: 300
 ```
 
-### Swaggers
-/api/v1/swagger-ui/index.html
-
-### oauth
-http://localhost:10000/auth/realms/tui-pilotes/.well-known/openid-configuration
-
-
-### Customer API
-POST 	/api/public/orders        : Create a new order
-PUT 	/api/public/orders/{id}   : Update the order information identified by "id"
-
-### Admin API
-GET 	/api/admin/orders                    : Get all orders
-GET 	/api/admin/orders/{id}               : Get the order information identified by "id"
-POST 	/api/admin/orders/findByCustomer     : Search orders by customer data
-GET 	/api/admin/customers                 : Search all customer
-GET 	/api/admin/customers/{id}            : Get the customer information identified by "id"
-POST 	/api/admin/customers/findByExample   : Get the customer by example
-
-
-
-/opt/jboss/keycloak/bin/standalone.sh \
--Djboss.socket.binding.port-offset=100 -Dkeycloak.migration.action=export \
--Dkeycloak.migration.provider=singleFile \
--Dkeycloak.migration.realmName=tui-pilotes \
--Dkeycloak.migration.usersExportStrategy=REALM_FILE \
--Dkeycloak.migration.file=/tmp/realm-export.json
+It's also configured the security, with "oauth2 resourceserver"
+If you want to start the application without security, you can use "dev-unsecured" profile.

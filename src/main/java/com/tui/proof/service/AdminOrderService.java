@@ -1,7 +1,7 @@
 package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 
 import java.util.List;
 

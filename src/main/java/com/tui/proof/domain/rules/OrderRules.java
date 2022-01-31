@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.Set;
 
 
-import com.tui.proof.domain.entities.Money;
+import com.tui.proof.domain.entities.base.Money;
 import lombok.AllArgsConstructor;
 
 

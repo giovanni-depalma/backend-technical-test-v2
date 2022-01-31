@@ -2,6 +2,8 @@ package com.tui.proof.util;
 
 import com.github.javafaker.Faker;
 import com.tui.proof.domain.entities.*;
+import com.tui.proof.domain.entities.base.Money;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.service.data.OrderRequest;
 
 import java.math.BigDecimal;

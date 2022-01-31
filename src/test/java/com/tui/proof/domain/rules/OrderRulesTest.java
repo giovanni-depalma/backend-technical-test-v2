@@ -1,7 +1,6 @@
 package com.tui.proof.domain.rules;
 
-import com.tui.proof.domain.entities.Money;
-import com.tui.proof.domain.rules.OrderRules;
+import com.tui.proof.domain.entities.base.Money;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;

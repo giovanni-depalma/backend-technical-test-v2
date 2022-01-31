@@ -1,4 +1,4 @@
-package com.tui.proof.domain.entities;
+package com.tui.proof.domain.entities.base;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

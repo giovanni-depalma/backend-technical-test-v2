@@ -3,7 +3,7 @@ package com.tui.proof.presenter.serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.tui.proof.domain.entities.Money;
+import com.tui.proof.domain.entities.base.Money;
 import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;

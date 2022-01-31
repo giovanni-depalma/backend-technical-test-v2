@@ -1,5 +1,6 @@
 package com.tui.proof.domain.entities;
 
+import com.tui.proof.domain.entities.base.PersonalInfo;
 import lombok.*;
 
 import javax.persistence.*;

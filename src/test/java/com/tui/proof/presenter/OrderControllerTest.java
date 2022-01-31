@@ -2,7 +2,7 @@ package com.tui.proof.presenter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.presenter.serializer.MoneySerializer;
 import com.tui.proof.service.AdminOrderService;
 import com.tui.proof.util.FakeCustomer;

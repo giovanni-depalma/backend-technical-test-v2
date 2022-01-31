@@ -2,7 +2,7 @@ package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.repositories.OrderRepository;
 import lombok.AllArgsConstructor;

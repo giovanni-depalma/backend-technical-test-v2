@@ -2,7 +2,7 @@ package com.tui.proof.util;
 
 import com.github.javafaker.Faker;
 import com.tui.proof.domain.entities.Customer;
-import com.tui.proof.domain.entities.PersonalInfo;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 
 import java.util.Random;
 import java.util.UUID;

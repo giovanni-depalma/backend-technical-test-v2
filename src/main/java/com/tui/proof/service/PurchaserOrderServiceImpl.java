@@ -1,6 +1,7 @@
 package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.*;
+import com.tui.proof.domain.entities.base.Money;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;

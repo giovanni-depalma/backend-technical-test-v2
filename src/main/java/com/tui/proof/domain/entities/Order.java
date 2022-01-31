@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
+import com.tui.proof.domain.entities.base.Address;
+import com.tui.proof.domain.entities.base.Money;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
