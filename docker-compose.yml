@@ -29,6 +29,7 @@ services:
     container_name: tui-pilotes-app
     environment:
       <<: *IS_ENVS
+#      SPRING_PROFILES_ACTIVE: dev-unsecured
     ports:
       - "8081:8081"
 
