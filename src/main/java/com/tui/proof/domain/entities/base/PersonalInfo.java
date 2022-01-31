@@ -31,7 +31,7 @@ public class PersonalInfo {
     String lastName;
 
     @NotBlank
-    @Size(min = 1, max = 100)
-    @Column(nullable = false, length = 100)
+    @Size(min = 1, max = 20)
+    @Column(nullable = false, length = 20)
     String telephone;
 }

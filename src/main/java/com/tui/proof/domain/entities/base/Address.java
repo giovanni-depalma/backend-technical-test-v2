@@ -3,6 +3,7 @@ package com.tui.proof.domain.entities.base;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.*;
@@ -18,16 +19,16 @@ public class Address {
     @Column(length = 100, nullable = false)
     @NotBlank String street;
 
-    @Size(min = 1, max = 10)
-    @Column(length = 10, nullable = false)
+    @Pattern(regexp = "^\\d{5}$")
+    @Column(length = 5, nullable = false)
     @NotBlank String postcode;
 
-    @Size(min = 1, max = 100)
-    @Column(length = 100, nullable = false)
+    @Size(min = 1, max = 50)
+    @Column(length = 50, nullable = false)
     @NotBlank String city;
 
-    @Size(min = 1, max = 100)
-    @Column(length = 100, nullable = false)
+    @Size(min = 1, max = 10)
+    @Column(length = 10, nullable = false)
     @NotBlank String country;
 
 

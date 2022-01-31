@@ -18,7 +18,7 @@ Use POST /purchaserOrders
   "pilotes": 5,
   "delivery": {
     "street": "Poco Mas Drive",
-    "postcode": "2420 ",
+    "postcode": "24205",
     "city": "Frisco",
     "country": "TX"
   },
@@ -229,6 +229,31 @@ spring:
 
 It's also configured the security, with "oauth2 resourceserver"
 If you want to start the application without security, you can use "dev-unsecured" profile.
+
+### Validation
+All data are validated, they may not cover all national standards, but they seem reasonable.
+
+In particular: 
+
+- All data are mandatory
+- All string are max 100 characters (some are more restrictive)
+
+**Address**
+
+- street: max 100 characters
+- postcode of 5 number: /^\d{5}$/
+- city: max 50 characters
+- country: max 10 characters
+
+**Person**
+
+- email must be valid and max 100 characters
+- phone numbers have several standards according to the country, so is a simple string (max 20 characters)
+- firstName: max 100 characters
+- lastName: 100 characters
+
+
+
 
 ### Docker-Compose
 
