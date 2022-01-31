@@ -1,4 +1,4 @@
-package com.tui.proof;
+package com.tui.proof.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

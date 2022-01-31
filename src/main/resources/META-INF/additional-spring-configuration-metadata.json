@@ -24,5 +24,10 @@
       "name": "is.client-secret",
       "type": "java.lang.String",
       "description": "Client-secret."
+    },
+    {
+      "name": "spring.main.security.white-list",
+      "type": "java.lang.String",
+      "description": "List of public endpoint"
     }
   ] }

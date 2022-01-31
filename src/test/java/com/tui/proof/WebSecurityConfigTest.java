@@ -1,5 +1,6 @@
 package com.tui.proof;
 
+import com.tui.proof.config.WebSecurityConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;

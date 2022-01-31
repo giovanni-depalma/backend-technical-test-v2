@@ -33,6 +33,12 @@ spring:
       - 15
       price: "1.33"
       closed_after_seconds: 300
+    security:
+      white_list:
+        - /swagger-ui/**
+        - /v3/api-docs/**
+        - /purchaserOrders/**
+        - /profile/**
 springdoc:
   show-login-endpoint: true
   swagger-ui:

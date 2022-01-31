@@ -1,4 +1,4 @@
-package com.tui.proof;
+package com.tui.proof.config;
 
 import java.math.BigDecimal;
 import java.util.Set;

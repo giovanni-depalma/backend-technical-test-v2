@@ -154,6 +154,20 @@ The following users have been configured for testing
 
 NOTE: the configuration of the identity server is development oriented, do not use it directly in production!
 
+The approach is to deny everything except what is authorized.
+It's possible configure the public endpoint via "application.yml"
+
+```yml
+spring:
+  main:
+    security:
+      white_list:
+        - /swagger-ui/**
+        - /v3/api-docs/**
+        - /purchaserOrders/**
+        - /profile/**
+```
+
 ### The Project
 The project it's logically divided in:
 
