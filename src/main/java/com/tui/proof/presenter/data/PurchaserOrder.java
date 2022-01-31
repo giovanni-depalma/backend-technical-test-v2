@@ -17,6 +17,6 @@ public class PurchaserOrder{
     Instant createdAt;
     Instant editableUntil;
     Address delivery;
-    PersonalInfo personalInfo;
+    PersonalInfo customer;
 
 }

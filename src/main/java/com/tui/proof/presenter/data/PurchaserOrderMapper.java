@@ -18,7 +18,7 @@ public class PurchaserOrderMapper implements Function<Order, PurchaserOrder> {
                 .total(order.getTotal())
                 .delivery(order.getDelivery())
                 .editableUntil(order.getEditableUntil())
-                .personalInfo(customer == null ? null : customer.getPersonalInfo())
+                .customer(customer == null ? null : customer.getPersonalInfo())
                 .build();
     }
 }

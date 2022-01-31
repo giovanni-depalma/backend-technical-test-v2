@@ -128,10 +128,10 @@ public class PurchaserOrderControllerTest {
                     jsonPath(prefix+"delivery.postcode").value(is(order.getDelivery().getPostcode())),
                     jsonPath(prefix+"delivery.city").value(is(order.getDelivery().getCity())),
                     jsonPath(prefix+"delivery.country").value(is(order.getDelivery().getCountry())),
-                    jsonPath(prefix+"personalInfo.email").value(is(personalInfo.getEmail())),
-                    jsonPath(prefix+"personalInfo.firstName").value(is(personalInfo.getFirstName())),
-                    jsonPath(prefix+"personalInfo.lastName").value(is(personalInfo.getLastName())),
-                    jsonPath(prefix+"personalInfo.telephone").value(is(personalInfo.getTelephone())),
+                    jsonPath(prefix+"customer.email").value(is(personalInfo.getEmail())),
+                    jsonPath(prefix+"customer.firstName").value(is(personalInfo.getFirstName())),
+                    jsonPath(prefix+"customer.lastName").value(is(personalInfo.getLastName())),
+                    jsonPath(prefix+"customer.telephone").value(is(personalInfo.getTelephone())),
                     jsonPath(prefix+"id").value(is(order.getId().toString()))
             };
         }
