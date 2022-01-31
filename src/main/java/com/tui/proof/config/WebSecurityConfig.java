@@ -1,8 +1,9 @@
 package com.tui.proof.config;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,12 +16,13 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import java.util.*;
 import java.util.stream.Collectors;
 
-@EnableWebSecurity
 @Slf4j
+@Configuration
+@EnableWebSecurity
+@AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private SecurityParameters securityParameters;
+    private final SecurityParameters securityParameters;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
