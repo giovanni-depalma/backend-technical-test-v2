@@ -1,5 +1,9 @@
 package com.tui.proof.presenter.configuration;
 
+import com.tui.proof.domain.entities.base.Money;
+import com.tui.proof.domain.entities.base.PersonalInfo;
+import io.swagger.v3.oas.models.media.StringSchema;
+import org.springdoc.core.SpringDocUtils;
 import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -20,5 +24,9 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 public class OpenApiConfiguration {
 
+    static {
+        SpringDocUtils.getConfig()
+                .replaceWithSchema(Money.class, new StringSchema().example("13.33 €"));
+    }
    
 }

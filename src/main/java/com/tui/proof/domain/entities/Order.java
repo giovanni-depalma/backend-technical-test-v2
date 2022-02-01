@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 import com.tui.proof.domain.entities.base.Address;
 import com.tui.proof.domain.entities.base.Money;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,6 +27,7 @@ public class Order {
     private Money total;
 
     @Column(nullable = false)
+    @Schema(example = "10")
     private Integer pilotes;
 
     @ManyToOne
