@@ -14,7 +14,14 @@ is:
   external-base-url: ${EXTERNAL_PROTOCOL:http}://${EXTERNAL_HOST:localhost}:${EXTERNAL_PORT:8080}/auth
   external-realm-url: ${is.external-base-url}/realms/${is.realm}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
 spring:
+  application:
+    name: tui-pilotes
   data:
     rest:
       basePath: /
@@ -41,6 +48,7 @@ spring:
         - /v3/api-docs/**
         - /purchaserOrders/**
         - /profile/**
+        - /actuator/**
 springdoc:
   show-login-endpoint: true
   swagger-ui:

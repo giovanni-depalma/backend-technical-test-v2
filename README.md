@@ -117,6 +117,7 @@ The project uses the following stack:
 - Spring Data JPA
 - Spring Data Rest
 - Spring Security
+- Spring Boot Actuator
 - Identity Server (Keycloak)
 
 The API (in my interpretation) are dedicated to two main actors:
@@ -167,6 +168,13 @@ spring:
         - /purchaserOrders/**
         - /profile/**
 ```
+
+#### Spring Boot Actuator
+
+Actuator endpoints let you monitor and interact with your application. In particular, the following endpoints have been activated through the "application.yml" file
+
+  - health: shows application health information.
+  - prometheus: exposes metrics in a format that can be scraped by a Prometheus server
 
 ### The Project
 The project it's logically divided in:
@@ -259,22 +267,7 @@ In particular:
 
 
 
-
-### Docker
-
-docker-compose starts 2 services
-- identity server
-- the app
-
-You can only start "identity service" during development to test security.
-
-#### Dockerfile
-Dockerfile it's multistage, to achieve two purposes:
-
-- best size for the final image
-- simulate a pipeline, including a "Test Stage" 
-
-#### Integration Test
+### Integration Test
 
 In the folder testing-apis-with-cypress there are simple APIs integration tests with Cypress.
 
@@ -284,3 +277,81 @@ To install and start the tests execute the commands:
 yarn install
 yarn test
 ```
+
+### Dockerfile
+Dockerfile it's multistage, to achieve two purposes:
+
+- best size for the final image
+- simulate a pipeline, including a "Test Stage" 
+
+
+### docker-compose
+
+The following docker-compose have been prepared:
+
+- docker-compose
+- docker-compose-full
+
+#### docker-compose
+
+docker-compose starts 2 services
+- identity server
+- the app
+
+To start / stop  use the following commands
+```
+docker-compose build
+docker-compose up -d
+docker-compose stop
+docker-compose down
+```
+
+You can only start "identity service" during development to test security.
+
+```
+docker-compose up identity-server
+```
+
+#### docker-compose-full
+
+The Docker plugin "grafana/loki-docker-driver" must be installed. Run the following command to install the plugin:
+
+```
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+```
+
+To check installed plugins, use the docker plugin ls command. Plugins that have started successfully are listed as enabled:
+
+```
+$ docker plugin ls
+ID                  NAME         DESCRIPTION           ENABLED
+ac720b8fcfdb        loki         Loki Logging Driver   true
+```
+
+docker-compose starts the following services:
+- identity server
+- the app
+- prometheus: to collect metrics
+- loki: to aggregate logs
+- grafana: to view logs and metrics
+
+
+
+To log in to Grafana open your web browser and go to http://localhost:3000/ . On the login page enter "tui-admin" for username and password.
+
+3 dashboards have been configured:
+
+- Logging Dashboard via Loki
+- JVM (Micrometer)
+- Order Statistics
+
+To start / stop  use the following commands
+
+```
+docker-compose -f docker-compose-full.yml build
+docker-compose -f docker-compose-full.yml up -d
+docker-compose -f docker-compose-full.yml stop
+docker-compose -f docker-compose-full.yml start
+```
+
+
