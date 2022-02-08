@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ import java.util.UUID;
 public class PurchaserOrderServiceImpl implements PurchaserOrderService{
     private final OrderRepository orderRepository;
     private final OrderRules orderRules;
-    private final TimerService timerGateway;
+    private final Clock clock;
     private final CustomerService customerService;
 
 
@@ -33,7 +34,7 @@ public class PurchaserOrderServiceImpl implements PurchaserOrderService{
             log.debug("create order: {}", orderRequest);
             checkOrderRequest(orderRequest);
             Customer customer = customerService.findByEmailAndSave(orderRequest.getCustomer());
-            Instant createdAt = timerGateway.now();
+            Instant createdAt = Instant.now(clock);
             Instant editableUntil = orderRules.calculateEditableUntil(createdAt);
             Money total = orderRules.calculateTotal(orderRequest.getPilotes());
             Order toSave = new Order();
@@ -59,7 +60,7 @@ public class PurchaserOrderServiceImpl implements PurchaserOrderService{
             log.debug("update order with uuid {}, request: {}", id, orderRequest);
             checkOrderRequest(orderRequest);
             Order savedOrder = orderRepository.findById(id).orElseThrow(ItemNotFoundException::new);
-            Instant now = timerGateway.now();
+            Instant now = Instant.now(clock);
             if(now.isAfter(savedOrder.getEditableUntil())){
                 log.debug("editing closed order with id {}", id);
                 throw new EditingClosedOrderException();

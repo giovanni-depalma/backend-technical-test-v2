@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class PurchaserOrderServiceImplTest {
     private OrderRules orderRules;
 
     @Mock
-    private TimerService timerGateway;
+    private Clock clock;
 
     @Mock
     private CustomerService customerService;
@@ -51,7 +52,7 @@ public class PurchaserOrderServiceImplTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expectedOrder = FakeOrder.buildOrder(request);
         Instant now = expectedOrder.getCreatedAt();
-        when(timerGateway.now()).thenReturn(now);
+        when(clock.instant()).thenReturn(now);
         when(customerService.findByEmailAndSave(request.getCustomer())).thenReturn(expectedOrder.getCustomer());
         when(orderRules.calculateTotal(request.getPilotes())).thenReturn(expectedOrder.getTotal());
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
@@ -88,7 +89,7 @@ public class PurchaserOrderServiceImplTest {
         UUID id = orderAlreadyPresent.getId();
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expectedOrder = FakeOrder.buildOrderWithId(id, orderAlreadyPresent.getCreatedAt(), orderAlreadyPresent.getEditableUntil(), request);
-        when(timerGateway.now()).thenReturn(expectedOrder.getEditableUntil());
+        when(clock.instant()).thenReturn(expectedOrder.getEditableUntil());
         when(orderRepository.save(any())).thenReturn(expectedOrder);
         when(orderRules.calculateTotal(request.getPilotes())).thenReturn(expectedOrder.getTotal());
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
@@ -118,7 +119,7 @@ public class PurchaserOrderServiceImplTest {
         UUID id = orderAlreadyPresent.getId();
         OrderRequest request = FakeOrder.buildOrderRequest();
         Instant timeAfterClose = orderAlreadyPresent.getEditableUntil().plusNanos(1L);
-        when(timerGateway.now()).thenReturn(timeAfterClose);
+        when(clock.instant()).thenReturn(timeAfterClose);
         when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenReturn(Optional.of(orderAlreadyPresent));
         assertThrows(EditingClosedOrderException.class, () -> service.updateOrder(id, request));
