@@ -1,20 +1,25 @@
 package com.tui.proof.presenter;
 
 import com.tui.proof.domain.entities.Order;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
-import com.tui.proof.presenter.data.PurchaserOrderMapper;
-import com.tui.proof.presenter.data.PurchaserOrder;
-import com.tui.proof.service.data.OrderRequest;
+import com.tui.proof.presenter.api.PurchaserOrderMapper;
+import com.tui.proof.presenter.api.PurchaserOrder;
+import com.tui.proof.service.OrderService;
+import com.tui.proof.service.api.OrderRequest;
 import com.tui.proof.domain.exception.ItemNotFoundException;
-import com.tui.proof.service.PurchaserOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,11 +28,11 @@ import java.util.UUID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
-@RequestMapping("/purchaserOrders")
-@Tag(name = "Purchaser", description = "Endpoints for make and update an order")
+@RequestMapping("/orders")
+@Tag(name = "Orders", description = "Endpoints for order management")
 @AllArgsConstructor
-public class PurchaserOrderController {
-    private final PurchaserOrderService purchaserOrderService;
+public class OrderController {
+    private final OrderService orderService;
     private final PurchaserOrderMapper mapper;
 
     @PostMapping
@@ -39,7 +44,7 @@ public class PurchaserOrderController {
     public EntityModel<PurchaserOrder> create(
             @Valid @RequestBody OrderRequest request)
             throws BadPilotesOrderException {
-        Order order = purchaserOrderService.createOrder(request);
+        Order order = orderService.createOrder(request);
         return toEntityModel(order);
     }
 
@@ -52,11 +57,22 @@ public class PurchaserOrderController {
             @ApiResponse(description = "Order closed", responseCode = "409", content = @Content)
     })
     public EntityModel<PurchaserOrder> update(@PathVariable UUID id, @Valid @RequestBody OrderRequest request) throws BadPilotesOrderException, EditingClosedOrderException, ItemNotFoundException {
-        Order order = purchaserOrderService.updateOrder(id, request);
+        Order order = orderService.updateOrder(id, request);
         return toEntityModel(order);
     }
 
+    @PostMapping("/findByCustomer")
+    @SecurityRequirement(name = "secure-api")
+    @SecurityRequirement(name = "secure-api2")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public CollectionModel<EntityModel<Order>> findByCustomer(@RequestBody PersonalInfo request) {
+        return CollectionModel.of(orderService.findByCustomer(request).stream().map(order -> {
+            Link selfLink = linkTo(OrderController.class).slash(order.getId()).withSelfRel();
+            return EntityModel.of(order).add(selfLink);
+        }).toList());
+    }
+
     private EntityModel<PurchaserOrder> toEntityModel(Order order){
-        return EntityModel.of(mapper.apply(order)).add(linkTo(PurchaserOrderController.class).slash(order.getId()).withSelfRel());
+        return EntityModel.of(mapper.apply(order)).add(linkTo(OrderController.class).slash(order.getId()).withSelfRel());
     }
 }

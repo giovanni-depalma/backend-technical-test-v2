@@ -2,7 +2,7 @@ package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.entities.base.PersonalInfo;
-import com.tui.proof.repositories.OrderRepository;
+import com.tui.proof.repository.OrderRepository;
 import com.tui.proof.util.FakeCustomer;
 import com.tui.proof.util.FakeListBuilder;
 import org.junit.jupiter.api.Test;
@@ -19,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminOrderServiceImplTest {
+public class OrderServiceFindTest {
 
     @Mock
     private OrderRepository orderRepository;
 
     @InjectMocks
-    private AdminOrderServiceImpl orderService;
+    private OrderService orderService;
 
     @Test
     public void shouldFindByCustomer() {

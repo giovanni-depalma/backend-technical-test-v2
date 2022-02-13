@@ -1,4 +1,4 @@
-package com.tui.proof.presenter.data;
+package com.tui.proof.presenter.api;
 
 import com.tui.proof.domain.entities.base.Address;
 import com.tui.proof.domain.entities.base.Money;

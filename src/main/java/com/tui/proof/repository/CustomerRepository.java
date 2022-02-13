@@ -1,4 +1,4 @@
-package com.tui.proof.repositories;
+package com.tui.proof.repository;
 
 import com.tui.proof.domain.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;

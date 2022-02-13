@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "spring.main.security")
 @Data
-public class SecurityParameters {
+public class WebSecurityConfigParameters {
     private String[] whiteList;
 }

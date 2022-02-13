@@ -1,11 +1,12 @@
 package com.tui.proof.presenter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tui.proof.config.SecurityParameters;
+import com.tui.proof.config.WebSecurityConfigParameters;
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.entities.base.PersonalInfo;
+import com.tui.proof.presenter.api.PurchaserOrderMapper;
 import com.tui.proof.presenter.serializer.MoneySerializer;
-import com.tui.proof.service.AdminOrderService;
+import com.tui.proof.service.OrderService;
 import com.tui.proof.util.FakeCustomer;
 import com.tui.proof.util.FakeListBuilder;
 import com.tui.proof.util.FakeOrder;
@@ -23,22 +24,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static com.tui.proof.presenter.Util.URI_ORDERS_FIND_BY_CUSTOMER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AdminOrderController.class)
+@WebMvcTest(OrderController.class)
 @WithMockUser(username="admin",roles={"ADMIN"})
-@Import(SecurityParameters.class)
-public class OrderControllerTest {
+@Import({PurchaserOrderMapper.class, WebSecurityConfigParameters.class})
+public class OrderControllerFindTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private AdminOrderService orderService;
+    private OrderService orderService;
 
     @Test
     public void shouldFindOrdersByCustomer() throws Exception {
@@ -48,7 +50,7 @@ public class OrderControllerTest {
         when(orderService.findByCustomer(request)).thenReturn(expected);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(post("/orders/findByCustomer").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
+        this.mockMvc.perform(post(URI_ORDERS_FIND_BY_CUSTOMER).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
                 .andExpectAll(OrderMatcher.checkOrders(expected));
     }
 

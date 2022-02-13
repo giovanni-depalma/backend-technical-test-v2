@@ -2,9 +2,9 @@ package com.tui.proof.config;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,7 +13,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final SecurityParameters securityParameters;
+    private final WebSecurityConfigParameters securityParameters;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -31,6 +33,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     try {
                         authorize
                                 .antMatchers(securityParameters.getWhiteList()).permitAll()
+                                .antMatchers(HttpMethod.POST, "/orders").permitAll()
+                                .antMatchers(HttpMethod.PUT, "/orders").permitAll()
                                 .anyRequest().hasRole("ADMIN")
                                 .and()
                                 .oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());

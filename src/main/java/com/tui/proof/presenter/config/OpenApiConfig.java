@@ -1,7 +1,6 @@
-package com.tui.proof.presenter.configuration;
+package com.tui.proof.presenter.config;
 
 import com.tui.proof.domain.entities.base.Money;
-import com.tui.proof.domain.entities.base.PersonalInfo;
 import io.swagger.v3.oas.models.media.StringSchema;
 import org.springdoc.core.SpringDocUtils;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +21,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
     ), in = SecuritySchemeIn.HEADER)
 @SecurityScheme(name = "secure-api2", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT" , in = SecuritySchemeIn.HEADER)
 
-public class OpenApiConfiguration {
+public class OpenApiConfig {
 
     static {
         SpringDocUtils.getConfig()

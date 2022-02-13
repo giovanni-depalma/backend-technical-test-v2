@@ -2,7 +2,7 @@ package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.base.PersonalInfo;
-import com.tui.proof.repositories.CustomerRepository;
+import com.tui.proof.repository.CustomerRepository;
 import com.tui.proof.util.FakeCustomer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,13 +17,13 @@ import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-public class CustomerServiceImplTest {
+public class CustomerServiceTest {
 
     @Mock
     private CustomerRepository customerRepository;
 
     @InjectMocks
-    private CustomerServiceImpl customerService;
+    private CustomerService customerService;
 
     @Test
     public void shouldUpdate(){

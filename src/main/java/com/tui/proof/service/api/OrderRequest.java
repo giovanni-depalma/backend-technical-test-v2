@@ -1,4 +1,4 @@
-package com.tui.proof.service.data;
+package com.tui.proof.service.api;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

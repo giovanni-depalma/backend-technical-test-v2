@@ -2,12 +2,12 @@ package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.exception.ServiceException;
-import com.tui.proof.service.data.OrderRequest;
+import com.tui.proof.service.api.OrderRequest;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;
 import com.tui.proof.domain.rules.OrderRules;
-import com.tui.proof.repositories.OrderRepository;
+import com.tui.proof.repository.OrderRepository;
 import com.tui.proof.util.FakeOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-public class PurchaserOrderServiceImplTest {
+public class OrderServiceCreateUpdateTest {
 
     @Mock
     private OrderRepository orderRepository;
@@ -45,7 +45,7 @@ public class PurchaserOrderServiceImplTest {
     ArgumentCaptor<Order> orderCaptor;
 
     @InjectMocks
-    private PurchaserOrderServiceImpl service;
+    private OrderService service;
 
     @Test
     public void shouldCreateOrder() throws BadPilotesOrderException {

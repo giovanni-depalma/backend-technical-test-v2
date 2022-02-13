@@ -2,33 +2,51 @@ package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.*;
 import com.tui.proof.domain.entities.base.Money;
+import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;
 import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.domain.rules.OrderRules;
-import com.tui.proof.repositories.OrderRepository;
-import com.tui.proof.service.data.OrderRequest;
+import com.tui.proof.repository.OrderRepository;
+import com.tui.proof.service.api.OrderRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @Slf4j
 @AllArgsConstructor
-public class PurchaserOrderServiceImpl implements PurchaserOrderService{
+public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderRules orderRules;
     private final Clock clock;
     private final CustomerService customerService;
 
+    public List<Order> findByCustomer(PersonalInfo personalInfo) {
+        try{
+            log.debug("findByCustomer with by example {}", personalInfo);
+            ExampleMatcher matcher = ExampleMatcher.matching()
+                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase();
+            Order orderData = new Order();
+            Customer customer = new Customer();
+            customer.setPersonalInfo(personalInfo);
+            orderData.setCustomer(customer);
+            return orderRepository.findAll(Example.of(orderData, matcher));
+        }
+        catch (Exception e){
+            log.error("error finding {}", personalInfo, e);
+            throw new ServiceException();
+        }
+    }
 
-
-    @Override
     public Order createOrder(OrderRequest orderRequest) throws BadPilotesOrderException {
         try{
             log.debug("create order: {}", orderRequest);
@@ -54,7 +72,6 @@ public class PurchaserOrderServiceImpl implements PurchaserOrderService{
         }
     }
 
-    @Override
     public Order updateOrder(UUID id, OrderRequest orderRequest) throws EditingClosedOrderException, ItemNotFoundException, BadPilotesOrderException {
         try{
             log.debug("update order with uuid {}, request: {}", id, orderRequest);

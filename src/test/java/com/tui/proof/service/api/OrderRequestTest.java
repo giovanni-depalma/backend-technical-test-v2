@@ -1,4 +1,4 @@
-package com.tui.proof.service.data;
+package com.tui.proof.service.api;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;

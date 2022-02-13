@@ -46,7 +46,6 @@ spring:
       white_list:
         - /swagger-ui/**
         - /v3/api-docs/**
-        - /purchaserOrders/**
         - /profile/**
         - /actuator/**
 springdoc:

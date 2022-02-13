@@ -2,16 +2,10 @@ package com.tui.proof.presenter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.tui.proof.config.SecurityParameters;
-import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.entities.base.PersonalInfo;
-import com.tui.proof.domain.exception.BadPilotesOrderException;
-import com.tui.proof.domain.exception.EditingClosedOrderException;
-import com.tui.proof.domain.exception.ItemNotFoundException;
-import com.tui.proof.presenter.data.PurchaserOrderMapper;
-import com.tui.proof.presenter.serializer.MoneySerializer;
-import com.tui.proof.service.PurchaserOrderService;
-import com.tui.proof.service.data.OrderRequest;
+import com.tui.proof.config.WebSecurityConfigParameters;
+import com.tui.proof.presenter.api.PurchaserOrderMapper;
+import com.tui.proof.service.OrderService;
+import com.tui.proof.service.api.OrderRequest;
 import com.tui.proof.util.FakeOrder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,27 +14,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
-import java.util.UUID;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.when;
+import static com.tui.proof.presenter.Util.URI_ORDERS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(PurchaserOrderController.class)
-@Import({PurchaserOrderMapper.class, SecurityParameters.class})
-public class PurchaserOrderControllerNotValidTest {
+@WebMvcTest(OrderController.class)
+@Import({PurchaserOrderMapper.class, WebSecurityConfigParameters.class})
+public class OrderControllerCreateUpdateKoTest {
     @Autowired
     private MockMvc mockMvc;
 
-
     @MockBean
-    private PurchaserOrderService orderService;
+    private OrderService orderService;
 
     @Test
     public void shouldNotCreateOrderWithBadEmail() throws Exception {
@@ -48,7 +34,7 @@ public class PurchaserOrderControllerNotValidTest {
         request.getCustomer().setEmail("bad");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(post("/purchaserOrders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(post(URI_ORDERS).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -57,7 +43,7 @@ public class PurchaserOrderControllerNotValidTest {
         request.getCustomer().setFirstName("");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(post("/purchaserOrders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(post(URI_ORDERS).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -67,7 +53,7 @@ public class PurchaserOrderControllerNotValidTest {
             request.getCustomer().setLastName("");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(post("/purchaserOrders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(post(URI_ORDERS).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -77,7 +63,7 @@ public class PurchaserOrderControllerNotValidTest {
         request.getCustomer().setTelephone("");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(post("/purchaserOrders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(post(URI_ORDERS).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -87,6 +73,6 @@ public class PurchaserOrderControllerNotValidTest {
         request.getDelivery().setPostcode("a1234");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
-        this.mockMvc.perform(post("/purchaserOrders").contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(post(URI_ORDERS).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isBadRequest());
     }
 }

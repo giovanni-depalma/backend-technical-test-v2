@@ -15,7 +15,7 @@ import lombok.Data;
 @Configuration
 @ConfigurationProperties(prefix = "spring.main.orders")
 @Data
-public class OrderConfig {
+public class    OrderConfig {
     private Set<Integer> allowedQuantity;
     private BigDecimal price;
     private int closedAfterSeconds;

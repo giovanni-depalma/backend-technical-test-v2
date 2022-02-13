@@ -2,6 +2,7 @@ package com.tui.proof.presenter.data;
 
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
+import com.tui.proof.presenter.api.PurchaserOrder;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
