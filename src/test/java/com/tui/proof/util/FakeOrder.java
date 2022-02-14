@@ -3,7 +3,9 @@ package com.tui.proof.util;
 import com.github.javafaker.Faker;
 import com.tui.proof.domain.entities.*;
 import com.tui.proof.domain.entities.base.Money;
-import com.tui.proof.domain.entities.base.PersonalInfo;
+import com.tui.proof.presenter.api.AddressResource;
+import com.tui.proof.presenter.api.CustomerResource;
+import com.tui.proof.presenter.api.OrderRequestResource;
 import com.tui.proof.service.api.OrderRequest;
 
 import java.math.BigDecimal;
@@ -45,11 +47,9 @@ public class FakeOrder {
 
     public static Order buildOrder(OrderRequest request) {
         Order order = buildOrder();
-        Customer customer = new Customer();
-        customer.setPersonalInfo(request.getCustomer());
-        order.setCustomer(customer);
-        order.setDelivery(request.getDelivery());
-        order.setPilotes(request.getPilotes());
+        order.setCustomer(request.customer());
+        order.setDelivery(request.delivery());
+        order.setPilotes(request.pilotes());
         return order;
     }
 
@@ -63,12 +63,16 @@ public class FakeOrder {
 
     public static OrderRequest buildOrderRequest() {
         Faker faker = new Faker(new Random());
-        PersonalInfo customer = FakeCustomer.buildPersonalInfo();
-        return OrderRequest.builder().pilotes(fakePilotes(faker)).customer(customer).delivery(FakeAddress.buildAddress()).build();
+        return new OrderRequest(fakePilotes(faker),FakeAddress.buildAddress(),FakeCustomer.buildCustomer());
     }
 
     public static OrderRequest buildBadOrderRequest() {
-        PersonalInfo customer = FakeCustomer.buildPersonalInfo();
-        return OrderRequest.builder().customer(customer).delivery(FakeAddress.buildAddress()).build();
+        return new OrderRequest(0, FakeAddress.buildAddress(),FakeCustomer.buildCustomer());
+    }
+
+    public static  OrderRequestResource buildResource(OrderRequest item){
+        AddressResource delivery = FakeAddress.buildResource(item.delivery());
+        CustomerResource customer = FakeCustomer.buildResource(item.customer());
+        return new OrderRequestResource(item.pilotes(), delivery, customer);
     }
 }

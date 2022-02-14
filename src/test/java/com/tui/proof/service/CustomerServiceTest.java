@@ -1,7 +1,6 @@
 package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Customer;
-import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.repository.CustomerRepository;
 import com.tui.proof.util.FakeCustomer;
 import org.junit.jupiter.api.Test;
@@ -27,22 +26,22 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldUpdate(){
-        PersonalInfo personalInfo = FakeCustomer.buildPersonalInfo();
+        Customer customer = FakeCustomer.buildCustomer();
         Customer already = new Customer();
         Customer expected = new Customer();
-        when(customerRepository.findByPersonalInfo_Email(personalInfo.getEmail())).thenReturn(Optional.of(already));
+        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(Optional.of(already));
         when(customerRepository.save(any())).thenReturn(expected);
-        Customer actual = customerService.findByEmailAndSave(personalInfo);
+        Customer actual = customerService.findByEmailAndSave(customer);
         assertEquals(expected, actual);
     }
 
     @Test
     public void shouldInsert() {
-        PersonalInfo personalInfo = FakeCustomer.buildPersonalInfo();
+        Customer customer = FakeCustomer.buildCustomer();
         Customer expected = new Customer();
-        when(customerRepository.findByPersonalInfo_Email(personalInfo.getEmail())).thenReturn(Optional.empty());
+        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(Optional.empty());
         when(customerRepository.save(any())).thenReturn(expected);
-        Customer actual = customerService.findByEmailAndSave(personalInfo);
+        Customer actual = customerService.findByEmailAndSave(customer);
         assertEquals(expected, actual);
     }
 }

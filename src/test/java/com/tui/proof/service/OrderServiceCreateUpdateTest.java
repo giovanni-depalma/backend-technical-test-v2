@@ -53,9 +53,9 @@ public class OrderServiceCreateUpdateTest {
         Order expectedOrder = FakeOrder.buildOrder(request);
         Instant now = expectedOrder.getCreatedAt();
         when(clock.instant()).thenReturn(now);
-        when(customerService.findByEmailAndSave(request.getCustomer())).thenReturn(expectedOrder.getCustomer());
-        when(orderRules.calculateTotal(request.getPilotes())).thenReturn(expectedOrder.getTotal());
-        when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
+        when(customerService.findByEmailAndSave(request.customer())).thenReturn(expectedOrder.getCustomer());
+        when(orderRules.calculateTotal(request.pilotes())).thenReturn(expectedOrder.getTotal());
+        when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRules.calculateEditableUntil(now)).thenReturn(expectedOrder.getEditableUntil());
         when(orderRepository.save(any())).thenReturn(expectedOrder);
         Order savedOrder = service.createOrder(request);
@@ -72,14 +72,14 @@ public class OrderServiceCreateUpdateTest {
     @Test
     public void shouldNotCreateAfterInternalError() {
         OrderRequest request = FakeOrder.buildOrderRequest();
-        when(orderRules.allowedPilotes(request.getPilotes())).thenThrow(RuntimeException.class);
+        when(orderRules.allowedPilotes(request.pilotes())).thenThrow(RuntimeException.class);
         assertThrows(ServiceException.class, () -> service.createOrder(request));
     }
 
     @Test
     public void shouldNotCreateOrder() {
         OrderRequest request = FakeOrder.buildOrderRequest();
-        when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(false);
+        when(orderRules.allowedPilotes(request.pilotes())).thenReturn(false);
         assertThrows(BadPilotesOrderException.class, () -> service.createOrder(request));
     }
 
@@ -91,8 +91,8 @@ public class OrderServiceCreateUpdateTest {
         Order expectedOrder = FakeOrder.buildOrderWithId(id, orderAlreadyPresent.getCreatedAt(), orderAlreadyPresent.getEditableUntil(), request);
         when(clock.instant()).thenReturn(expectedOrder.getEditableUntil());
         when(orderRepository.save(any())).thenReturn(expectedOrder);
-        when(orderRules.calculateTotal(request.getPilotes())).thenReturn(expectedOrder.getTotal());
-        when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
+        when(orderRules.calculateTotal(request.pilotes())).thenReturn(expectedOrder.getTotal());
+        when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(any())).thenReturn(Optional.of(orderAlreadyPresent));
         when(orderRepository.save(any())).thenReturn(expectedOrder);
         Order savedOrder = service.updateOrder(id, request);
@@ -109,7 +109,7 @@ public class OrderServiceCreateUpdateTest {
     public void shouldNotUpdateWithBadPilotes() {
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildBadOrderRequest();
-        when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(false);
+        when(orderRules.allowedPilotes(request.pilotes())).thenReturn(false);
         assertThrows(BadPilotesOrderException.class, () -> service.updateOrder(id, request));
     }
 
@@ -120,7 +120,7 @@ public class OrderServiceCreateUpdateTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         Instant timeAfterClose = orderAlreadyPresent.getEditableUntil().plusNanos(1L);
         when(clock.instant()).thenReturn(timeAfterClose);
-        when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
+        when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenReturn(Optional.of(orderAlreadyPresent));
         assertThrows(EditingClosedOrderException.class, () -> service.updateOrder(id, request));
     }
@@ -129,7 +129,7 @@ public class OrderServiceCreateUpdateTest {
     public void shouldNotUpdateIfNotPresent() {
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildOrderRequest();
-        when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
+        when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(ItemNotFoundException.class, () -> service.updateOrder(id, request));
     }
@@ -139,7 +139,7 @@ public class OrderServiceCreateUpdateTest {
         Order orderAlreadyPresent = FakeOrder.buildOrder();
         UUID id = orderAlreadyPresent.getId();
         OrderRequest request = FakeOrder.buildOrderRequest();
-        when(orderRules.allowedPilotes(request.getPilotes())).thenReturn(true);
+        when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenThrow(RuntimeException.class);
         assertThrows(ServiceException.class, () -> service.updateOrder(id, request));
     }

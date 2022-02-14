@@ -1,6 +1,5 @@
 package com.tui.proof.domain.entities;
 
-import com.tui.proof.domain.entities.base.PersonalInfo;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,12 +10,22 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(exclude = {"id"})
 public class Customer {
     @Id
     @GeneratedValue
     private UUID id;
 
-    @Embedded
-    private PersonalInfo personalInfo;
+    @Column(unique = true, length = 100, nullable = false)
+    String email;
+
+    @Column(nullable = false, length = 100)
+    String firstName;
+
+    @Column(nullable = false, length = 100)
+    String lastName;
+
+    @Column(nullable = false, length = 30)
+    String telephone;
 
 }

@@ -1,7 +1,7 @@
 package com.tui.proof.service;
 
+import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.repository.OrderRepository;
 import com.tui.proof.util.FakeCustomer;
 import com.tui.proof.util.FakeListBuilder;
@@ -29,7 +29,7 @@ public class OrderServiceFindTest {
 
     @Test
     public void shouldFindByCustomer() {
-        PersonalInfo customer = FakeCustomer.buildPersonalInfo();
+        Customer customer = FakeCustomer.buildCustomer();
         List<Order> expected = FakeListBuilder.buildList(Order::new);
         when(orderRepository.findAll(ArgumentMatchers.<Example<Order>>any())).thenReturn(expected);
         List<Order> actual = orderService.findByCustomer(customer);

@@ -2,12 +2,12 @@ package com.tui.proof.presenter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.config.WebSecurityConfigParameters;
+import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;
-import com.tui.proof.presenter.api.PurchaserOrderMapper;
+import com.tui.proof.mapper.OrderMapper;
 import com.tui.proof.presenter.serializer.MoneySerializer;
 import com.tui.proof.service.OrderService;
 import com.tui.proof.service.api.OrderRequest;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static com.tui.proof.presenter.Util.URI_ORDERS;
 
 @WebMvcTest(OrderController.class)
-@Import({PurchaserOrderMapper.class, WebSecurityConfigParameters.class})
+@Import({OrderMapper.class, WebSecurityConfigParameters.class})
 public class OrderControllerCreateUpdateTest {
     @Autowired
     private MockMvc mockMvc;
@@ -119,7 +119,7 @@ public class OrderControllerCreateUpdateTest {
         private static ResultMatcher[] checkOrder(Order order) {
             final String prefix = "";
             MoneySerializer serializer = new MoneySerializer();
-            PersonalInfo personalInfo = order.getCustomer().getPersonalInfo();
+            Customer customer = order.getCustomer();
             return new ResultMatcher[]{
                     jsonPath(prefix+"total").value(is(serializer.getString(order.getTotal())), String.class),
                     jsonPath(prefix+"pilotes").value(is(order.getPilotes()), Integer.class),
@@ -129,10 +129,10 @@ public class OrderControllerCreateUpdateTest {
                     jsonPath(prefix+"delivery.postcode").value(is(order.getDelivery().getPostcode())),
                     jsonPath(prefix+"delivery.city").value(is(order.getDelivery().getCity())),
                     jsonPath(prefix+"delivery.country").value(is(order.getDelivery().getCountry())),
-                    jsonPath(prefix+"customer.email").value(is(personalInfo.getEmail())),
-                    jsonPath(prefix+"customer.firstName").value(is(personalInfo.getFirstName())),
-                    jsonPath(prefix+"customer.lastName").value(is(personalInfo.getLastName())),
-                    jsonPath(prefix+"customer.telephone").value(is(personalInfo.getTelephone())),
+                    jsonPath(prefix+"customer.email").value(is(customer.getEmail())),
+                    jsonPath(prefix+"customer.firstName").value(is(customer.getFirstName())),
+                    jsonPath(prefix+"customer.lastName").value(is(customer.getLastName())),
+                    jsonPath(prefix+"customer.telephone").value(is(customer.getTelephone())),
                     jsonPath(prefix+"id").value(is(order.getId().toString()))
             };
         }

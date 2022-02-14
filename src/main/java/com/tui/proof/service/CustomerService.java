@@ -1,8 +1,8 @@
 package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Customer;
-import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.domain.exception.ServiceException;
+import com.tui.proof.mapper.CustomerMapper;
 import com.tui.proof.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,17 +15,40 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final CustomerMapper mapper;
 
-    public Customer findByEmailAndSave(PersonalInfo personalInfo) {
+    public Optional<Customer> findByEmail(String email){
         try{
-            log.debug("findByEmailAndSave order: {}", personalInfo);
-            Optional<Customer> found = customerRepository.findByPersonalInfo_Email(personalInfo.getEmail());
+            log.debug("findByEmail order: {}", email);
+            return customerRepository.findByEmail(email);
+        }
+        catch(Exception e){
+            log.error("error findByEmail: {}", email, e);
+            throw new ServiceException();
+        }
+    }
+
+    public Customer findByEmailAndSave(Customer customer) {
+        try{
+            log.debug("findByEmailAndSave order: {}", customer);
+            Optional<Customer> found = customerRepository.findByEmail(customer.getEmail());
             Customer toSave = found.orElseGet(Customer::new);
-            toSave.setPersonalInfo(personalInfo);
+            mapper.update(customer, toSave);
             return customerRepository.save(toSave);
         }
         catch(Exception e){
-            log.error("error findByEmailAndSave {}", personalInfo, e);
+            log.error("error findByEmailAndSave {}", customer, e);
+            throw new ServiceException();
+        }
+    }
+
+    public Customer save(Customer customer) {
+        try{
+            log.debug("save: {}", customer);
+            return customerRepository.save(customer);
+        }
+        catch(Exception e){
+            log.error("error save {}", customer, e);
             throw new ServiceException();
         }
     }

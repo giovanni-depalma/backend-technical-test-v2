@@ -2,9 +2,9 @@ package com.tui.proof.presenter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.config.WebSecurityConfigParameters;
+import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.domain.entities.base.PersonalInfo;
-import com.tui.proof.presenter.api.PurchaserOrderMapper;
+import com.tui.proof.mapper.OrderMapper;
 import com.tui.proof.service.OrderService;
 import com.tui.proof.util.FakeCustomer;
 import com.tui.proof.util.FakeListBuilder;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(OrderController.class)
 @WithMockUser(username="admin",roles={"CUSTOMER"})
-@Import({PurchaserOrderMapper.class, WebSecurityConfigParameters.class})
+@Import({OrderMapper.class, WebSecurityConfigParameters.class})
 public class OrderControllerNotAuthorizedTest {
 
     @Autowired
@@ -39,7 +39,7 @@ public class OrderControllerNotAuthorizedTest {
     @Test
     public void shouldNotFindOrdersByCustomer() throws Exception {
         int expectedSize = 2;
-        PersonalInfo request = FakeCustomer.buildPersonalInfo();
+        Customer request = FakeCustomer.buildCustomer();
         List<Order> expected = FakeListBuilder.buildList(expectedSize, FakeOrder::buildOrder);
         when(orderService.findByCustomer(request)).thenReturn(expected);
         ObjectMapper objectMapper = new ObjectMapper();

@@ -2,7 +2,7 @@ package com.tui.proof.util;
 
 import com.github.javafaker.Faker;
 import com.tui.proof.domain.entities.Customer;
-import com.tui.proof.domain.entities.base.PersonalInfo;
+import com.tui.proof.presenter.api.CustomerResource;
 
 import java.util.Random;
 import java.util.UUID;
@@ -13,19 +13,17 @@ public class FakeCustomer {
         Faker faker = new Faker(new Random());
         Customer customer = new Customer();
         customer.setId(UUID.randomUUID());
-        customer.setPersonalInfo(buildPersonalInfo(faker));
+        String email = faker.bothify("????##@gmail.com");
+        customer.setEmail(email);
+        customer.setFirstName(faker.name().firstName());
+        customer.setLastName(faker.name().lastName());
+        customer.setTelephone(faker.phoneNumber().phoneNumber());
         return customer;
     }
 
-    public static PersonalInfo buildPersonalInfo() {
-        Faker faker = new Faker(new Random());
-        return buildPersonalInfo(faker);
+
+    public static  CustomerResource buildResource(Customer item){
+        return new CustomerResource(item.getEmail(), item.getFirstName(), item.getLastName(), item.getTelephone());
     }
 
-    private static PersonalInfo buildPersonalInfo(Faker faker) {
-        String email = faker.bothify("????##@gmail.com");
-        return PersonalInfo.builder().firstName(faker.name().firstName())
-                .lastName(faker.name().lastName()).email(email).telephone(faker.phoneNumber().phoneNumber())
-                .build();
-    }
 }

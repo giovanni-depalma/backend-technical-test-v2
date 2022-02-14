@@ -2,7 +2,6 @@ package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.*;
 import com.tui.proof.domain.entities.base.Money;
-import com.tui.proof.domain.entities.base.PersonalInfo;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;
@@ -30,19 +29,17 @@ public class OrderService {
     private final Clock clock;
     private final CustomerService customerService;
 
-    public List<Order> findByCustomer(PersonalInfo personalInfo) {
+    public List<Order> findByCustomer(Customer customer) {
         try{
-            log.debug("findByCustomer with by example {}", personalInfo);
+            log.debug("findByCustomer with by example {}", customer);
             ExampleMatcher matcher = ExampleMatcher.matching()
                     .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase();
             Order orderData = new Order();
-            Customer customer = new Customer();
-            customer.setPersonalInfo(personalInfo);
             orderData.setCustomer(customer);
             return orderRepository.findAll(Example.of(orderData, matcher));
         }
         catch (Exception e){
-            log.error("error finding {}", personalInfo, e);
+            log.error("error finding {}", customer, e);
             throw new ServiceException();
         }
     }
@@ -51,15 +48,15 @@ public class OrderService {
         try{
             log.debug("create order: {}", orderRequest);
             checkOrderRequest(orderRequest);
-            Customer customer = customerService.findByEmailAndSave(orderRequest.getCustomer());
+            Customer customer = customerService.findByEmailAndSave(orderRequest.customer());
             Instant createdAt = Instant.now(clock);
             Instant editableUntil = orderRules.calculateEditableUntil(createdAt);
-            Money total = orderRules.calculateTotal(orderRequest.getPilotes());
+            Money total = orderRules.calculateTotal(orderRequest.pilotes());
             Order toSave = new Order();
             populateOrder(toSave, createdAt, editableUntil);
             toSave.setCustomer(customer);
-            toSave.setDelivery(orderRequest.getDelivery());
-            toSave.setPilotes(orderRequest.getPilotes());
+            toSave.setDelivery(orderRequest.delivery());
+            toSave.setPilotes(orderRequest.pilotes());
             toSave.setTotal(total);
             return orderRepository.save(toSave);
         }
@@ -84,12 +81,12 @@ public class OrderService {
             }
             else{
                 log.debug("editing open order with id {}", id);
-                Customer customer2 = customerService.findByEmailAndSave(orderRequest.getCustomer());
-                Money total = orderRules.calculateTotal(orderRequest.getPilotes());
+                Customer customer = customerService.findByEmailAndSave(orderRequest.customer());
+                Money total = orderRules.calculateTotal(orderRequest.pilotes());
                 populateOrder(savedOrder, savedOrder.getCreatedAt(), savedOrder.getEditableUntil());
-                savedOrder.setCustomer(customer2);
-                savedOrder.setDelivery(orderRequest.getDelivery());
-                savedOrder.setPilotes(orderRequest.getPilotes());
+                savedOrder.setCustomer(customer);
+                savedOrder.setDelivery(orderRequest.delivery());
+                savedOrder.setPilotes(orderRequest.pilotes());
                 savedOrder.setTotal(total);
                 return orderRepository.save(savedOrder);
             }
@@ -104,7 +101,7 @@ public class OrderService {
     }
 
     private void checkOrderRequest(OrderRequest orderRequest) throws BadPilotesOrderException {
-        if(!orderRules.allowedPilotes(orderRequest.getPilotes()))
+        if(!orderRules.allowedPilotes(orderRequest.pilotes()))
             throw new BadPilotesOrderException();
     }
 
@@ -112,5 +109,6 @@ public class OrderService {
         order.setCreatedAt(createdAt);
         order.setEditableUntil(editableUntil);
     }
+
 
 }
