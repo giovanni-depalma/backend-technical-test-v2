@@ -28,19 +28,6 @@ public class CustomerService {
         }
     }
 
-    public Customer findByEmailAndSave(Customer customer) {
-        try{
-            log.debug("findByEmailAndSave order: {}", customer);
-            Optional<Customer> found = customerRepository.findByEmail(customer.getEmail());
-            Customer toSave = found.orElseGet(Customer::new);
-            mapper.update(customer, toSave);
-            return customerRepository.save(toSave);
-        }
-        catch(Exception e){
-            log.error("error findByEmailAndSave {}", customer, e);
-            throw new ServiceException();
-        }
-    }
 
     public Customer save(Customer customer) {
         try{

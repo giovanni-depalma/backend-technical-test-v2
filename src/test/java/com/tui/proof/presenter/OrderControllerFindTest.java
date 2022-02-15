@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.config.WebSecurityConfigParameters;
 import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
-import com.tui.proof.mapper.OrderMapper;
+import com.tui.proof.mapper.*;
 import com.tui.proof.presenter.serializer.MoneySerializer;
+import com.tui.proof.service.CustomerService;
 import com.tui.proof.service.OrderService;
 import com.tui.proof.util.FakeCustomer;
 import com.tui.proof.util.FakeListBuilder;
@@ -26,6 +27,7 @@ import java.util.stream.IntStream;
 
 import static com.tui.proof.presenter.Util.URI_ORDERS_FIND_BY_CUSTOMER;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -33,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(OrderController.class)
 @WithMockUser(username="admin",roles={"ADMIN"})
-@Import({OrderMapper.class, WebSecurityConfigParameters.class})
+@Import({OrderMapperImpl.class, AddressMapperImpl.class, CustomerMapperImpl.class, WebSecurityConfigParameters.class})
 public class OrderControllerFindTest {
 
     @Autowired
@@ -41,6 +43,10 @@ public class OrderControllerFindTest {
 
     @MockBean
     private OrderService orderService;
+
+    @MockBean
+    private CustomerService customerService;
+
 
     @Test
     public void shouldFindOrdersByCustomer() throws Exception {
@@ -51,7 +57,8 @@ public class OrderControllerFindTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);
         this.mockMvc.perform(post(URI_ORDERS_FIND_BY_CUSTOMER).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
-                .andExpectAll(OrderMatcher.checkOrders(expected));
+                .andExpectAll(OrderMatcher.checkOrders(expected))
+                .andDo((h)-> verifyNoInteractions(customerService));
     }
 
 
@@ -74,10 +81,10 @@ public class OrderControllerFindTest {
                     jsonPath(prefix+"delivery.postcode").value(is(order.getDelivery().getPostcode())),
                     jsonPath(prefix+"delivery.city").value(is(order.getDelivery().getCity())),
                     jsonPath(prefix+"delivery.country").value(is(order.getDelivery().getCountry())),
-                    jsonPath(prefix+"customer.personalInfo.email").value(is(customer.getEmail())),
-                    jsonPath(prefix+"customer.personalInfo.firstName").value(is(customer.getFirstName())),
-                    jsonPath(prefix+"customer.personalInfo.lastName").value(is(customer.getLastName())),
-                    jsonPath(prefix+"customer.personalInfo.telephone").value(is(customer.getTelephone())),
+                    jsonPath(prefix+"customer.email").value(is(customer.getEmail())),
+                    jsonPath(prefix+"customer.firstName").value(is(customer.getFirstName())),
+                    jsonPath(prefix+"customer.lastName").value(is(customer.getLastName())),
+                    jsonPath(prefix+"customer.telephone").value(is(customer.getTelephone())),
                     jsonPath(prefix+"id").value(is(order.getId().toString()))
             };
         }

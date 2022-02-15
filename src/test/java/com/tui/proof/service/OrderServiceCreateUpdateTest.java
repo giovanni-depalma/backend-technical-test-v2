@@ -53,7 +53,6 @@ public class OrderServiceCreateUpdateTest {
         Order expectedOrder = FakeOrder.buildOrder(request);
         Instant now = expectedOrder.getCreatedAt();
         when(clock.instant()).thenReturn(now);
-        when(customerService.findByEmailAndSave(request.customer())).thenReturn(expectedOrder.getCustomer());
         when(orderRules.calculateTotal(request.pilotes())).thenReturn(expectedOrder.getTotal());
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRules.calculateEditableUntil(now)).thenReturn(expectedOrder.getEditableUntil());

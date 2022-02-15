@@ -48,7 +48,8 @@ public class OrderService {
         try{
             log.debug("create order: {}", orderRequest);
             checkOrderRequest(orderRequest);
-            Customer customer = customerService.findByEmailAndSave(orderRequest.customer());
+            Customer customer = orderRequest.customer();
+            customerService.save(customer);
             Instant createdAt = Instant.now(clock);
             Instant editableUntil = orderRules.calculateEditableUntil(createdAt);
             Money total = orderRules.calculateTotal(orderRequest.pilotes());
@@ -81,7 +82,8 @@ public class OrderService {
             }
             else{
                 log.debug("editing open order with id {}", id);
-                Customer customer = customerService.findByEmailAndSave(orderRequest.customer());
+                Customer customer = orderRequest.customer();
+                customerService.save(customer);
                 Money total = orderRules.calculateTotal(orderRequest.pilotes());
                 populateOrder(savedOrder, savedOrder.getCreatedAt(), savedOrder.getEditableUntil());
                 savedOrder.setCustomer(customer);

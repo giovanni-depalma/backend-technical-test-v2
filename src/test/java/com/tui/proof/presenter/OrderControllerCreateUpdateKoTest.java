@@ -3,7 +3,9 @@ package com.tui.proof.presenter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.tui.proof.config.WebSecurityConfigParameters;
+import com.tui.proof.mapper.CustomerMapper;
 import com.tui.proof.mapper.OrderMapper;
+import com.tui.proof.service.CustomerService;
 import com.tui.proof.service.OrderService;
 import com.tui.proof.service.api.OrderRequest;
 import com.tui.proof.util.FakeOrder;
@@ -29,7 +31,13 @@ public class OrderControllerCreateUpdateKoTest {
     private OrderService orderService;
 
     @MockBean
+    private CustomerService customerService;
+
+    @MockBean
     private OrderMapper orderMapper;
+
+    @MockBean
+    private CustomerMapper customerMapper;
 
     @Test
     public void shouldNotCreateOrderWithBadEmail() throws Exception {

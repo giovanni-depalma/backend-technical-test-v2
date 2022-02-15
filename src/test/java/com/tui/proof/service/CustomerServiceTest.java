@@ -25,23 +25,29 @@ public class CustomerServiceTest {
     private CustomerService customerService;
 
     @Test
-    public void shouldUpdate(){
+    public void shouldFind(){
         Customer customer = FakeCustomer.buildCustomer();
-        Customer already = new Customer();
-        Customer expected = new Customer();
-        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(Optional.of(already));
-        when(customerRepository.save(any())).thenReturn(expected);
-        Customer actual = customerService.findByEmailAndSave(customer);
+        Optional<Customer> expected = Optional.of(new Customer());
+        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(expected);
+        Optional<Customer> actual = customerService.findByEmail(customer.getEmail());
         assertEquals(expected, actual);
     }
 
     @Test
-    public void shouldInsert() {
+    public void shouldNotFind(){
         Customer customer = FakeCustomer.buildCustomer();
-        Customer expected = new Customer();
-        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(Optional.empty());
+        Optional<Customer> expected = Optional.empty();
+        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(expected);
+        Optional<Customer> actual = customerService.findByEmail(customer.getEmail());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldSave() {
+        Customer customer = FakeCustomer.buildCustomer();
+        Customer expected = customer;
         when(customerRepository.save(any())).thenReturn(expected);
-        Customer actual = customerService.findByEmailAndSave(customer);
+        Customer actual = customerService.save(customer);
         assertEquals(expected, actual);
     }
 }

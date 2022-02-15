@@ -18,7 +18,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler(ServiceException.class)
     public final ResponseEntity<Object> handleServiceExceptions(ServiceException ex, WebRequest request) {
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(new ExceptionResponse("internal error"),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(BadPilotesOrderException.class)

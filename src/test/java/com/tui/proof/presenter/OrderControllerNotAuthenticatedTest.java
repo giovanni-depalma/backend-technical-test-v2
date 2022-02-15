@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.config.WebSecurityConfigParameters;
 import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
+import com.tui.proof.mapper.CustomerMapper;
 import com.tui.proof.mapper.OrderMapper;
+import com.tui.proof.service.CustomerService;
 import com.tui.proof.service.OrderService;
 import com.tui.proof.util.FakeCustomer;
 import com.tui.proof.util.FakeListBuilder;
@@ -35,7 +37,13 @@ public class OrderControllerNotAuthenticatedTest {
     private OrderService orderService;
 
     @MockBean
-    private OrderMapper orderRequestMapper;
+    private CustomerService customerService;
+
+    @MockBean
+    private OrderMapper orderMapper;
+
+    @MockBean
+    private CustomerMapper customerMapper;
 
     @Test
     public void shouldNotFindOrdersByCustomer() throws Exception {

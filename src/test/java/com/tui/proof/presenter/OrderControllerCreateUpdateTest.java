@@ -7,8 +7,9 @@ import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;
-import com.tui.proof.mapper.OrderMapper;
+import com.tui.proof.mapper.*;
 import com.tui.proof.presenter.serializer.MoneySerializer;
+import com.tui.proof.service.CustomerService;
 import com.tui.proof.service.OrderService;
 import com.tui.proof.service.api.OrderRequest;
 import com.tui.proof.util.FakeOrder;
@@ -21,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -33,22 +35,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static com.tui.proof.presenter.Util.URI_ORDERS;
 
 @WebMvcTest(OrderController.class)
-@Import({OrderMapper.class, WebSecurityConfigParameters.class})
+@Import({OrderMapperImpl.class, CustomerMapperImpl.class, AddressMapperImpl.class, WebSecurityConfigParameters.class})
 public class OrderControllerCreateUpdateTest {
     @Autowired
     private MockMvc mockMvc;
 
-
     @MockBean
     private OrderService orderService;
+
+    @MockBean
+    private CustomerService customerService;
 
     @Test
     public void shouldCreateOrder() throws Exception {
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expected = FakeOrder.buildOrder();
+        when(customerService.findByEmail(request.customer().getEmail())).thenReturn(Optional.of(expected.getCustomer()));
         when(orderService.createOrder(request)).thenReturn(expected);
         ObjectMapper objectMapper = new ObjectMapper();
-        String jsonRequest = objectMapper.writeValueAsString(request);
+        String jsonRequest = objectMapper.writeValueAsString(FakeOrder.buildResource(request));
+        this.mockMvc.perform(post(URI_ORDERS).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
+                .andExpectAll(OrderMatcher.checkOrder(expected));
+    }
+
+    @Test
+    public void shouldCreateOrderWithNewCustomer() throws Exception {
+        OrderRequest request = FakeOrder.buildOrderRequest();
+        Order expected = FakeOrder.buildOrder();
+        when(customerService.findByEmail(request.customer().getEmail())).thenReturn(Optional.empty());
+        when(orderService.createOrder(request)).thenReturn(expected);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonRequest = objectMapper.writeValueAsString(FakeOrder.buildResource(request));
         this.mockMvc.perform(post(URI_ORDERS).contentType(MediaType.APPLICATION_JSON).content(jsonRequest)).andExpect(status().isOk())
                 .andExpectAll(OrderMatcher.checkOrder(expected));
     }
@@ -66,6 +83,7 @@ public class OrderControllerCreateUpdateTest {
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expected = FakeOrder.buildOrder();
+        when(customerService.findByEmail(request.customer().getEmail())).thenReturn(Optional.of(expected.getCustomer()));
         when(orderService.updateOrder(id, request)).thenReturn(expected);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(request);

@@ -11,13 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderMapperTest {
 
-    @Test
-    public void shouldOrderRequestToDomain(){
-        OrderMapper mapper = Mappers.getMapper(OrderMapper.class);
-        OrderRequest expected = FakeOrder.buildOrderRequest();
-        OrderRequest actual = mapper.toDomain(FakeOrder.buildResource(expected));
-        assertEquals(expected, actual);
-    }
+
 
 
 }

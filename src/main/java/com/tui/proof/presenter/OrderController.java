@@ -1,5 +1,6 @@
 package com.tui.proof.presenter;
 
+import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
 import com.tui.proof.domain.exception.BadPilotesOrderException;
 import com.tui.proof.domain.exception.EditingClosedOrderException;
@@ -8,6 +9,7 @@ import com.tui.proof.presenter.api.CustomerResource;
 import com.tui.proof.presenter.api.OrderRequestResource;
 import com.tui.proof.presenter.api.OrderResource;
 import com.tui.proof.mapper.OrderMapper;
+import com.tui.proof.service.CustomerService;
 import com.tui.proof.service.OrderService;
 import com.tui.proof.domain.exception.ItemNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +25,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -33,6 +36,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @AllArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+    private final CustomerService customerService;
     private final OrderMapper orderMapper;
     private final CustomerMapper customerMapper;
 
@@ -45,7 +49,8 @@ public class OrderController {
     public EntityModel<OrderResource> create(
             @Valid @RequestBody OrderRequestResource request)
             throws BadPilotesOrderException {
-        Order order = orderService.createOrder(orderMapper.toDomain(request));
+        Customer customer = mapCustomer(request.customer());
+        Order order = orderService.createOrder(orderMapper.toDomain(request, customer));
         return toEntityModel(order);
     }
 
@@ -58,7 +63,8 @@ public class OrderController {
             @ApiResponse(description = "Order closed", responseCode = "409", content = @Content)
     })
     public EntityModel<OrderResource> update(@PathVariable UUID id, @Valid @RequestBody OrderRequestResource request) throws BadPilotesOrderException, EditingClosedOrderException, ItemNotFoundException {
-        Order order = orderService.updateOrder(id, orderMapper.toDomain(request));
+        Customer customer = mapCustomer(request.customer());
+        Order order = orderService.updateOrder(id, orderMapper.toDomain(request, customer));
         return toEntityModel(order);
     }
 
@@ -75,5 +81,11 @@ public class OrderController {
 
     private EntityModel<OrderResource> toEntityModel(Order order){
         return EntityModel.of(orderMapper.toResource(order)).add(linkTo(OrderController.class).slash(order.getId()).withSelfRel());
+    }
+
+    private Customer mapCustomer(CustomerResource resource){
+        Customer target = customerService.findByEmail(resource.email()).orElseGet(Customer::new);
+        customerMapper.update(resource, target);
+        return target;
     }
 }

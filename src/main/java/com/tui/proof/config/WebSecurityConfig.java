@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         authorize
                                 .antMatchers(securityParameters.getWhiteList()).permitAll()
                                 .antMatchers(HttpMethod.POST, "/orders").permitAll()
-                                .antMatchers(HttpMethod.PUT, "/orders").permitAll()
+                                .antMatchers(HttpMethod.PUT, "/orders/*").permitAll()
                                 .anyRequest().hasRole("ADMIN")
                                 .and()
                                 .oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());
