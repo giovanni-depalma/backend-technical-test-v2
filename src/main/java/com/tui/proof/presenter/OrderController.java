@@ -25,7 +25,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -72,10 +71,10 @@ public class OrderController {
     @SecurityRequirement(name = "secure-api")
     @SecurityRequirement(name = "secure-api2")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public CollectionModel<EntityModel<Order>> findByCustomer(@RequestBody CustomerResource request) {
+    public CollectionModel<EntityModel<OrderResource>> findByCustomer(@RequestBody CustomerResource request) {
         return CollectionModel.of(orderService.findByCustomer(customerMapper.toDomain(request)).stream().map(order -> {
             Link selfLink = linkTo(OrderController.class).slash(order.getId()).withSelfRel();
-            return EntityModel.of(order).add(selfLink);
+            return EntityModel.of(orderMapper.toResource(order)).add(selfLink);
         }).toList());
     }
 

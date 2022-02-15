@@ -2,11 +2,7 @@ package com.tui.proof.domain.entities.base;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Data

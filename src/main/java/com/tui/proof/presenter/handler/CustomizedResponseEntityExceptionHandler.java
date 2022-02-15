@@ -17,23 +17,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
-    public final ResponseEntity<Object> handleServiceExceptions(ServiceException ex, WebRequest request) {
-        return new ResponseEntity(new ExceptionResponse("internal error"),HttpStatus.INTERNAL_SERVER_ERROR);
+    public final ResponseEntity<ExceptionResponse> handleServiceExceptions(ServiceException ex, WebRequest request) {
+        return new ResponseEntity<>(new ExceptionResponse("internal error"),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(BadPilotesOrderException.class)
-    public final ResponseEntity<Object> handleBadPilotesOrderException(BadPilotesOrderException ex, WebRequest request) {
-        return new ResponseEntity(new ExceptionResponse("bad pilotes number"), HttpStatus.BAD_REQUEST);
+    public final ResponseEntity<ExceptionResponse> handleBadPilotesOrderException(BadPilotesOrderException ex, WebRequest request) {
+        return new ResponseEntity<>(new ExceptionResponse("bad pilotes number"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EditingClosedOrderException.class)
-    public final ResponseEntity<Object> handleEditingClosedOrderException(EditingClosedOrderException ex, WebRequest request) {
-        return new ResponseEntity(new ExceptionResponse("editing a closed order"), HttpStatus.CONFLICT);
+    public final ResponseEntity<ExceptionResponse> handleEditingClosedOrderException(EditingClosedOrderException ex, WebRequest request) {
+        return new ResponseEntity<>(new ExceptionResponse("editing a closed order"), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ItemNotFoundException.class)
-    public final ResponseEntity<Object> handleItemNotFoundException(ItemNotFoundException ex, WebRequest request) {
-        return new ResponseEntity(new ExceptionResponse("item not found"), HttpStatus.NOT_FOUND);
+    public final ResponseEntity<ExceptionResponse> handleItemNotFoundException(ItemNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(new ExceptionResponse("item not found"), HttpStatus.NOT_FOUND);
     }
 
 }

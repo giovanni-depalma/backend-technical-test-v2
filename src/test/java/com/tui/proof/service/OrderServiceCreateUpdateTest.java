@@ -60,6 +60,7 @@ public class OrderServiceCreateUpdateTest {
         Order savedOrder = service.createOrder(request);
         assertEquals(expectedOrder, savedOrder);
         assertEquals(expectedOrder.getCustomer(), savedOrder.getCustomer());
+        verify(customerService, times(1)).save(expectedOrder.getCustomer());
         //verify server side generated fields
         verify(orderRepository, times(1)).save(orderCaptor.capture());
         Order orderSentToRepository = orderCaptor.getValue();

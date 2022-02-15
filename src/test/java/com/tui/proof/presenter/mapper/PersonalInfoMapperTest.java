@@ -7,7 +7,6 @@ import com.tui.proof.util.FakeCustomer;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PersonalInfoMapperTest {

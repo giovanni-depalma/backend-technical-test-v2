@@ -6,6 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+@Schema(name = "Customer")
 public record CustomerResource(@Schema(example = "EufrasioAlmanzaCepeda@armyspy.com") @Email @Size(min = 1, max = 100) String email,
                                @Schema(example = "Eufrasio Almanza") @NotBlank @Size(min = 1, max = 100) String firstName,
                                @Schema(example = "Cepeda") @NotBlank @Size(min = 1, max = 100) String lastName,

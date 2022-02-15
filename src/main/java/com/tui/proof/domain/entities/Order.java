@@ -8,6 +8,7 @@ import javax.persistence.*;
 import com.tui.proof.domain.entities.base.Address;
 import com.tui.proof.domain.entities.base.Money;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,6 +18,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(exclude = {"id"})
 @NamedEntityGraph(name = "graph.order.customer", attributeNodes = @NamedAttributeNode("customer"))
 public class Order {
     @Id

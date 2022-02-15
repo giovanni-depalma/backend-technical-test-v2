@@ -5,16 +5,10 @@ import java.util.UUID;
 
 import com.tui.proof.domain.entities.Order;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.stereotype.Repository;
 

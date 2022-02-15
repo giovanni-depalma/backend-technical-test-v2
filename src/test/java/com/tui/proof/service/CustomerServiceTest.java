@@ -44,10 +44,9 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldSave() {
-        Customer customer = FakeCustomer.buildCustomer();
-        Customer expected = customer;
+        Customer expected = FakeCustomer.buildCustomer();
         when(customerRepository.save(any())).thenReturn(expected);
-        Customer actual = customerService.save(customer);
+        Customer actual = customerService.save(expected);
         assertEquals(expected, actual);
     }
 }
