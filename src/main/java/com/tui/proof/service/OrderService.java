@@ -24,10 +24,10 @@ import java.util.UUID;
 @Slf4j
 @AllArgsConstructor
 public class OrderService {
-    private final OrderRepository orderRepository;
-    private final OrderRules orderRules;
-    private final Clock clock;
-    private final CustomerService customerService;
+    private OrderRepository orderRepository;
+    private OrderRules orderRules;
+    private Clock clock;
+    private CustomerService customerService;
 
     public List<Order> findByCustomer(Customer customer) {
         try{

@@ -1,8 +1,11 @@
 package com.tui.proof.domain.entities;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -10,7 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(exclude = {"id"})
 public class Customer {
     @Id
     @GeneratedValue
@@ -28,4 +30,16 @@ public class Customer {
     @Column(nullable = false, length = 30)
     String telephone;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(email, customer.email) && Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName) && Objects.equals(telephone, customer.telephone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, firstName, lastName, telephone);
+    }
 }

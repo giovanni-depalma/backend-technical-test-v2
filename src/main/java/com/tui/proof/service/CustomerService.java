@@ -14,8 +14,8 @@ import java.util.Optional;
 @Slf4j
 @AllArgsConstructor
 public class CustomerService {
-    private final CustomerRepository customerRepository;
-    private final CustomerMapper mapper;
+    private CustomerRepository customerRepository;
+    private CustomerMapper mapper;
 
     public Optional<Customer> findByEmail(String email){
         try{

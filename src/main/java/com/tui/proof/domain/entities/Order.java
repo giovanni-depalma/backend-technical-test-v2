@@ -1,24 +1,22 @@
 package com.tui.proof.domain.entities;
 
-import java.time.Instant;
-import java.util.UUID;
-
-import javax.persistence.*;
-
 import com.tui.proof.domain.entities.base.Address;
 import com.tui.proof.domain.entities.base.Money;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import javax.persistence.*;
+import java.time.Instant;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "order_data")
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(exclude = {"id"})
 @NamedEntityGraph(name = "graph.order.customer", attributeNodes = @NamedAttributeNode("customer"))
 public class Order {
     @Id
@@ -46,4 +44,16 @@ public class Order {
     @Embedded
     private Address delivery;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(total, order.total) && Objects.equals(pilotes, order.pilotes) && Objects.equals(customer, order.customer) && Objects.equals(createdAt, order.createdAt) && Objects.equals(editableUntil, order.editableUntil) && Objects.equals(delivery, order.delivery);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(total, pilotes, customer, createdAt, editableUntil, delivery);
+    }
 }
