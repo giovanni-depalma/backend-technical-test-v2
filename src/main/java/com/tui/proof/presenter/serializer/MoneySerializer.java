@@ -7,6 +7,8 @@ import com.tui.proof.domain.entities.base.Money;
 import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -14,8 +16,8 @@ import java.util.Locale;
 public class MoneySerializer extends JsonSerializer<Money> {
 
     public String getString(Money value){
-        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.ITALY);
-        return value == null ? "" : nf.format(value.getValue());
+        DecimalFormat df = new DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        return value == null ? "" : df.format(value.getValue());
     }
 
     @Override

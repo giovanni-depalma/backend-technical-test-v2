@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -55,32 +57,38 @@ public class OrderServiceCreateUpdateTest {
         when(clock.instant()).thenReturn(now);
         when(orderRules.calculateTotal(request.pilotes())).thenReturn(expectedOrder.getTotal());
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
+        when(customerService.findByEmailAndSave(any())).thenReturn(Mono.just(expectedOrder.getCustomer()));
         when(orderRules.calculateEditableUntil(now)).thenReturn(expectedOrder.getEditableUntil());
         when(orderRepository.save(any())).thenReturn(expectedOrder);
-        Order savedOrder = service.createOrder(request);
-        assertEquals(expectedOrder, savedOrder);
-        assertEquals(expectedOrder.getCustomer(), savedOrder.getCustomer());
-        verify(customerService, times(1)).save(expectedOrder.getCustomer());
-        //verify server side generated fields
-        verify(orderRepository, times(1)).save(orderCaptor.capture());
-        Order orderSentToRepository = orderCaptor.getValue();
-        assertEquals(expectedOrder.getCreatedAt(), orderSentToRepository.getCreatedAt() );
-        assertEquals(expectedOrder.getEditableUntil() , orderSentToRepository.getEditableUntil() );
-        assertEquals(expectedOrder.getTotal(), orderSentToRepository.getTotal() );
+        Mono<Order> actual = service.createOrder(request);
+        StepVerifier.create(actual).consumeNextWith(savedOrder -> {
+            assertEquals(expectedOrder, savedOrder);
+            assertEquals(expectedOrder.getCustomer(), savedOrder.getCustomer());
+            verify(customerService, times(1)).findByEmailAndSave(expectedOrder.getCustomer());
+            //verify server side generated fields
+            verify(orderRepository, times(1)).save(orderCaptor.capture());
+            Order orderSentToRepository = orderCaptor.getValue();
+            assertEquals(expectedOrder.getCreatedAt(), orderSentToRepository.getCreatedAt() );
+            assertEquals(expectedOrder.getEditableUntil() , orderSentToRepository.getEditableUntil() );
+            assertEquals(expectedOrder.getTotal(), orderSentToRepository.getTotal() );
+        }).verifyComplete();
+
     }
 
     @Test
     public void shouldNotCreateAfterInternalError() {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenThrow(RuntimeException.class);
-        assertThrows(ServiceException.class, () -> service.createOrder(request));
+        Mono<Order> actual = service.createOrder(request);
+        StepVerifier.create(actual).expectError(ServiceException.class);
     }
 
     @Test
     public void shouldNotCreateOrder() {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(false);
-        assertThrows(BadPilotesOrderException.class, () -> service.createOrder(request));
+        Mono<Order> actual = service.createOrder(request);
+        StepVerifier.create(actual).expectError(BadPilotesOrderException.class);
     }
 
     @Test
@@ -93,16 +101,20 @@ public class OrderServiceCreateUpdateTest {
         when(orderRepository.save(any())).thenReturn(expectedOrder);
         when(orderRules.calculateTotal(request.pilotes())).thenReturn(expectedOrder.getTotal());
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
+        when(customerService.findByEmailAndSave(any())).thenReturn(Mono.just(expectedOrder.getCustomer()));
         when(orderRepository.findById(any())).thenReturn(Optional.of(orderAlreadyPresent));
         when(orderRepository.save(any())).thenReturn(expectedOrder);
-        Order savedOrder = service.updateOrder(id, request);
-        assertEquals(expectedOrder, savedOrder);
-        //verify server side generated fields
-        verify(orderRepository, times(1)).save(orderCaptor.capture());
-        Order orderSentToGateway = orderCaptor.getValue();
-        assertEquals(expectedOrder.getCreatedAt(), orderSentToGateway.getCreatedAt());
-        assertEquals(expectedOrder.getEditableUntil(), orderSentToGateway.getEditableUntil());
-        assertEquals(expectedOrder.getTotal(), orderSentToGateway.getTotal());
+        Mono<Order> actual = service.updateOrder(id, request);
+        StepVerifier.create(actual).consumeNextWith(savedOrder -> {
+            assertEquals(expectedOrder, savedOrder);
+            //verify server side generated fields
+            verify(orderRepository, times(1)).save(orderCaptor.capture());
+            Order orderSentToGateway = orderCaptor.getValue();
+            assertEquals(expectedOrder.getCreatedAt(), orderSentToGateway.getCreatedAt());
+            assertEquals(expectedOrder.getEditableUntil(), orderSentToGateway.getEditableUntil());
+            assertEquals(expectedOrder.getTotal(), orderSentToGateway.getTotal());
+        }).verifyComplete();
+
     }
 
     @Test
@@ -110,7 +122,8 @@ public class OrderServiceCreateUpdateTest {
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildBadOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(false);
-        assertThrows(BadPilotesOrderException.class, () -> service.updateOrder(id, request));
+        Mono<Order> actual = service.createOrder(request);
+        StepVerifier.create(actual).expectError(BadPilotesOrderException.class);
     }
 
     @Test
@@ -122,7 +135,8 @@ public class OrderServiceCreateUpdateTest {
         when(clock.instant()).thenReturn(timeAfterClose);
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenReturn(Optional.of(orderAlreadyPresent));
-        assertThrows(EditingClosedOrderException.class, () -> service.updateOrder(id, request));
+        Mono<Order> actual = service.updateOrder(id, request);
+        StepVerifier.create(actual).expectError(EditingClosedOrderException.class);
     }
 
     @Test
@@ -131,7 +145,8 @@ public class OrderServiceCreateUpdateTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(ItemNotFoundException.class, () -> service.updateOrder(id, request));
+        Mono<Order> actual = service.updateOrder(id, request);
+        StepVerifier.create(actual).expectError(ItemNotFoundException.class);
     }
 
     @Test
@@ -141,6 +156,7 @@ public class OrderServiceCreateUpdateTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenThrow(RuntimeException.class);
-        assertThrows(ServiceException.class, () -> service.updateOrder(id, request));
+        Mono<Order> actual = service.updateOrder(id, request);
+        StepVerifier.create(actual).expectError(ServiceException.class);
     }
 }

@@ -7,6 +7,8 @@ import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;
 import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.domain.rules.OrderRules;
+import com.tui.proof.mapper.CustomerMapper;
+import com.tui.proof.presenter.api.CustomerResource;
 import com.tui.proof.repository.OrderRepository;
 import com.tui.proof.service.api.OrderRequest;
 import lombok.AllArgsConstructor;
@@ -14,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -29,48 +33,49 @@ public class OrderService {
     private Clock clock;
     private CustomerService customerService;
 
-    public List<Order> findByCustomer(Customer customer) {
+    public Flux<Order> findByCustomer(Customer customer) {
         try{
             log.debug("findByCustomer with by example {}", customer);
             ExampleMatcher matcher = ExampleMatcher.matching()
                     .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase();
             Order orderData = new Order();
             orderData.setCustomer(customer);
-            return orderRepository.findAll(Example.of(orderData, matcher));
+            return Flux.fromIterable(orderRepository.findAll(Example.of(orderData, matcher)));
         }
         catch (Exception e){
             log.error("error finding {}", customer, e);
-            throw new ServiceException();
+            return Flux.error(new ServiceException());
         }
     }
 
-    public Order createOrder(OrderRequest orderRequest) throws BadPilotesOrderException {
+    public Mono<Order> createOrder(OrderRequest orderRequest) {
         try{
             log.debug("create order: {}", orderRequest);
             checkOrderRequest(orderRequest);
-            Customer customer = orderRequest.customer();
-            customerService.save(customer);
-            Instant createdAt = Instant.now(clock);
-            Instant editableUntil = orderRules.calculateEditableUntil(createdAt);
-            Money total = orderRules.calculateTotal(orderRequest.pilotes());
-            Order toSave = new Order();
-            populateOrder(toSave, createdAt, editableUntil);
-            toSave.setCustomer(customer);
-            toSave.setDelivery(orderRequest.delivery());
-            toSave.setPilotes(orderRequest.pilotes());
-            toSave.setTotal(total);
-            return orderRepository.save(toSave);
+            return customerService.findByEmailAndSave(orderRequest.customer()).flatMap(customer -> {
+                Instant createdAt = Instant.now(clock);
+                Instant editableUntil = orderRules.calculateEditableUntil(createdAt);
+                Money total = orderRules.calculateTotal(orderRequest.pilotes());
+                Order toSave = new Order();
+                populateOrder(toSave, createdAt, editableUntil);
+                toSave.setCustomer(customer);
+                toSave.setDelivery(orderRequest.delivery());
+                toSave.setPilotes(orderRequest.pilotes());
+                toSave.setTotal(total);
+                return Mono.just(orderRepository.save(toSave));
+            });
+
         }
         catch (BadPilotesOrderException e){
-            throw e;
+            return Mono.error(e);
         }
         catch(Exception e){
             log.error("error saving: {}", orderRequest, e);
-            throw new ServiceException();
+            return Mono.error(new ServiceException());
         }
     }
 
-    public Order updateOrder(UUID id, OrderRequest orderRequest) throws EditingClosedOrderException, ItemNotFoundException, BadPilotesOrderException {
+    public Mono<Order> updateOrder(UUID id, OrderRequest orderRequest) {
         try{
             log.debug("update order with uuid {}, request: {}", id, orderRequest);
             checkOrderRequest(orderRequest);
@@ -78,27 +83,28 @@ public class OrderService {
             Instant now = Instant.now(clock);
             if(now.isAfter(savedOrder.getEditableUntil())){
                 log.debug("editing closed order with id {}", id);
-                throw new EditingClosedOrderException();
+                return Mono.error(new EditingClosedOrderException());
             }
             else{
                 log.debug("editing open order with id {}", id);
-                Customer customer = orderRequest.customer();
-                customerService.save(customer);
-                Money total = orderRules.calculateTotal(orderRequest.pilotes());
-                populateOrder(savedOrder, savedOrder.getCreatedAt(), savedOrder.getEditableUntil());
-                savedOrder.setCustomer(customer);
-                savedOrder.setDelivery(orderRequest.delivery());
-                savedOrder.setPilotes(orderRequest.pilotes());
-                savedOrder.setTotal(total);
-                return orderRepository.save(savedOrder);
+                return customerService.findByEmailAndSave(orderRequest.customer()).flatMap(customer -> {
+                    log.debug("editing open order with id {}, customer saved {}", id, customer);
+                    Money total = orderRules.calculateTotal(orderRequest.pilotes());
+                    populateOrder(savedOrder, savedOrder.getCreatedAt(), savedOrder.getEditableUntil());
+                    savedOrder.setCustomer(customer);
+                    savedOrder.setDelivery(orderRequest.delivery());
+                    savedOrder.setPilotes(orderRequest.pilotes());
+                    savedOrder.setTotal(total);
+                    return Mono.just(orderRepository.save(savedOrder));
+                });
             }
         }
-        catch (BadPilotesOrderException | EditingClosedOrderException | ItemNotFoundException e){
-            throw e;
+        catch (BadPilotesOrderException | ItemNotFoundException e){
+            return Mono.error(e);
         }
         catch(Exception e){
             log.error("error saving: " + orderRequest, e);
-            throw new ServiceException();
+            return Mono.error(new EditingClosedOrderException());
         }
     }
 
@@ -111,6 +117,7 @@ public class OrderService {
         order.setCreatedAt(createdAt);
         order.setEditableUntil(editableUntil);
     }
+
 
 
 }

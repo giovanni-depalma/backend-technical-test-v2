@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Example;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 import java.util.List;
 
@@ -32,8 +34,8 @@ public class OrderServiceFindTest {
         Customer customer = FakeCustomer.buildCustomer();
         List<Order> expected = FakeListBuilder.buildList(Order::new);
         when(orderRepository.findAll(ArgumentMatchers.<Example<Order>>any())).thenReturn(expected);
-        List<Order> actual = orderService.findByCustomer(customer);
-        assertEquals(expected, actual);
+        Flux<Order> actual = orderService.findByCustomer(customer);
+        StepVerifier.create(actual).expectNext(expected.toArray(new Order[expected.size()])).expectComplete();
     }
 
 }

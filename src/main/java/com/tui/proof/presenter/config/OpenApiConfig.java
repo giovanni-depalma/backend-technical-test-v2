@@ -20,12 +20,11 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
     tokenUrl = "${is.external-realm-url}/protocol/openid-connect/token")
     ), in = SecuritySchemeIn.HEADER)
 @SecurityScheme(name = "secure-api2", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT" , in = SecuritySchemeIn.HEADER)
-
 public class OpenApiConfig {
 
     static {
         SpringDocUtils.getConfig()
-                .replaceWithSchema(Money.class, new StringSchema().example("13.33 €"));
+                .replaceWithSchema(Money.class, new StringSchema().example("13.33"));
     }
    
 }

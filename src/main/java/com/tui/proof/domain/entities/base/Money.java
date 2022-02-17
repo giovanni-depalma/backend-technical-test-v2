@@ -15,6 +15,10 @@ public class Money{
     @Column(name = "money_value", nullable = false)
     BigDecimal value;
 
+    public Money(String value){
+        this(new BigDecimal(value));
+    }
+
     public Money multiply(int n) {
         return new Money(value.multiply(BigDecimal.valueOf(n)));
     }

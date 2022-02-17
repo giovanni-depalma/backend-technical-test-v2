@@ -56,7 +56,8 @@ describe('Orders API', () => {
     }).then((response) => {
       expect(response.status).to.eq(200);
       expect(response.body).to.be.a('array');
-      //nested.property('_embedded.orders.length').gt(0);
+      const orders = response.body;
+      expect(orders.length).gt(0);
     });
   })
 
@@ -71,7 +72,6 @@ describe('Orders API', () => {
       }
     }).then((response) => {
       expect(response.status).to.eq(200);
-      expect(response.body).not.to.have.nested.property('_embedded.orders');
     });
   })
 

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.Optional;
 
@@ -29,8 +31,8 @@ public class CustomerServiceTest {
         Customer customer = FakeCustomer.buildCustomer();
         Optional<Customer> expected = Optional.of(new Customer());
         when(customerRepository.findByEmail(customer.getEmail())).thenReturn(expected);
-        Optional<Customer> actual = customerService.findByEmail(customer.getEmail());
-        assertEquals(expected, actual);
+        Mono<Customer> actual = customerService.findByEmail(customer.getEmail());
+        StepVerifier.create(actual).expectNext(expected.get()).expectComplete();
     }
 
     @Test
@@ -38,15 +40,15 @@ public class CustomerServiceTest {
         Customer customer = FakeCustomer.buildCustomer();
         Optional<Customer> expected = Optional.empty();
         when(customerRepository.findByEmail(customer.getEmail())).thenReturn(expected);
-        Optional<Customer> actual = customerService.findByEmail(customer.getEmail());
-        assertEquals(expected, actual);
+        Mono<Customer> actual = customerService.findByEmail(customer.getEmail());
+        StepVerifier.create(actual).expectComplete();
     }
 
     @Test
     public void shouldSave() {
         Customer expected = FakeCustomer.buildCustomer();
         when(customerRepository.save(any())).thenReturn(expected);
-        Customer actual = customerService.save(expected);
-        assertEquals(expected, actual);
+        Mono<Customer> actual = customerService.save(expected);
+        StepVerifier.create(actual).expectNext(expected).expectComplete();
     }
 }

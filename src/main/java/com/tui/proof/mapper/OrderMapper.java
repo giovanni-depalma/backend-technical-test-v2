@@ -13,5 +13,7 @@ public interface OrderMapper {
     @Mapping(source = "customer", target = "customer")
     OrderRequest toDomain(OrderRequestResource item, Customer customer);
 
+    OrderRequest toDomain(OrderRequestResource item);
+
     OrderResource toResource(Order item);
 }

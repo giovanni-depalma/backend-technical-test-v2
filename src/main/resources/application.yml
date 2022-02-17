@@ -22,10 +22,6 @@ management:
 spring:
   application:
     name: tui-pilotes
-  data:
-    rest:
-      basePath: /
-      detection-strategy: ANNOTATED
   jpa:
     show-sql: false
     open-in-view: false
@@ -35,6 +31,7 @@ spring:
         jwt:
           jwk-set-uri: ${is.realm-url}/protocol/openid-connect/certs
   main:
+    allow-bean-definition-overriding: true
     orders:
       allowed_quantity:
       - 5
@@ -51,6 +48,7 @@ spring:
 springdoc:
   show-login-endpoint: true
   swagger-ui:
+    path: swagger-ui/index.html
     oauth:
       clientId: ${is.client-id}
       clientSecret: ${is.client-secret}
