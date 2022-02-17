@@ -26,7 +26,7 @@ describe('Orders API', () => {
 
   it('Add a new item', () => {
     cy.request('POST', API_URL_ORDER, baseRequest ).then((response) => {
-      expect(response.status).to.eq(200)
+      expect(response.status).to.eq(201)
       newId = response.body.id;
       expect(response.body).to.have.property('total');
       expect(response.body).to.have.property('createdAt');
@@ -55,8 +55,8 @@ describe('Orders API', () => {
       }
     }).then((response) => {
       expect(response.status).to.eq(200);
-      expect(response.body).to.have.nested.property('_embedded.orders');
-      expect(response.body).nested.property('_embedded.orders.length').gt(0);
+      expect(response.body).to.be.a('array');
+      //nested.property('_embedded.orders.length').gt(0);
     });
   })
 
