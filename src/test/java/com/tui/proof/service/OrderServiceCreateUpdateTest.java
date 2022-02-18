@@ -59,7 +59,7 @@ public class OrderServiceCreateUpdateTest {
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(customerService.findByEmailAndSave(any())).thenReturn(Mono.just(expectedOrder.getCustomer()));
         when(orderRules.calculateEditableUntil(now)).thenReturn(expectedOrder.getEditableUntil());
-        when(orderRepository.save(any())).thenReturn(expectedOrder);
+        when(orderRepository.save(any())).thenReturn(Mono.just(expectedOrder));
         Mono<Order> actual = service.createOrder(request);
         StepVerifier.create(actual).consumeNextWith(savedOrder -> {
             assertEquals(expectedOrder, savedOrder);
@@ -98,12 +98,12 @@ public class OrderServiceCreateUpdateTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expectedOrder = FakeOrder.buildOrderWithId(id, orderAlreadyPresent.getCreatedAt(), orderAlreadyPresent.getEditableUntil(), request);
         when(clock.instant()).thenReturn(expectedOrder.getEditableUntil());
-        when(orderRepository.save(any())).thenReturn(expectedOrder);
+        when(orderRepository.save(any())).thenReturn(Mono.just(expectedOrder));
         when(orderRules.calculateTotal(request.pilotes())).thenReturn(expectedOrder.getTotal());
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(customerService.findByEmailAndSave(any())).thenReturn(Mono.just(expectedOrder.getCustomer()));
-        when(orderRepository.findById(any())).thenReturn(Optional.of(orderAlreadyPresent));
-        when(orderRepository.save(any())).thenReturn(expectedOrder);
+        when(orderRepository.findById(id)).thenReturn(Mono.just(orderAlreadyPresent));
+        when(orderRepository.save(any())).thenReturn(Mono.just(expectedOrder));
         Mono<Order> actual = service.updateOrder(id, request);
         StepVerifier.create(actual).consumeNextWith(savedOrder -> {
             assertEquals(expectedOrder, savedOrder);
@@ -134,7 +134,7 @@ public class OrderServiceCreateUpdateTest {
         Instant timeAfterClose = orderAlreadyPresent.getEditableUntil().plusNanos(1L);
         when(clock.instant()).thenReturn(timeAfterClose);
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
-        when(orderRepository.findById(id)).thenReturn(Optional.of(orderAlreadyPresent));
+        when(orderRepository.findById(id)).thenReturn(Mono.just(orderAlreadyPresent));
         Mono<Order> actual = service.updateOrder(id, request);
         StepVerifier.create(actual).expectError(EditingClosedOrderException.class);
     }
@@ -144,7 +144,7 @@ public class OrderServiceCreateUpdateTest {
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
-        when(orderRepository.findById(id)).thenReturn(Optional.empty());
+        when(orderRepository.findById(id)).thenReturn(Mono.empty());
         Mono<Order> actual = service.updateOrder(id, request);
         StepVerifier.create(actual).expectError(ItemNotFoundException.class);
     }

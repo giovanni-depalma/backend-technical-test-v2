@@ -22,6 +22,9 @@ management:
 spring:
   application:
     name: tui-pilotes
+  mongodb:
+    embedded:
+      version: 2.6.10
   jpa:
     show-sql: false
     open-in-view: false
@@ -52,5 +55,3 @@ springdoc:
     oauth:
       clientId: ${is.client-id}
       clientSecret: ${is.client-secret}
-
-

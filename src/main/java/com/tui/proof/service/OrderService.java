@@ -40,7 +40,7 @@ public class OrderService {
                     .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase();
             Order orderData = new Order();
             orderData.setCustomer(customer);
-            return Flux.fromIterable(orderRepository.findAll(Example.of(orderData, matcher)));
+            return orderRepository.findAll(Example.of(orderData, matcher));
         }
         catch (Exception e){
             log.error("error finding {}", customer, e);
@@ -57,12 +57,13 @@ public class OrderService {
                 Instant editableUntil = orderRules.calculateEditableUntil(createdAt);
                 Money total = orderRules.calculateTotal(orderRequest.pilotes());
                 Order toSave = new Order();
+                toSave.setId(UUID.randomUUID());
                 populateOrder(toSave, createdAt, editableUntil);
                 toSave.setCustomer(customer);
                 toSave.setDelivery(orderRequest.delivery());
                 toSave.setPilotes(orderRequest.pilotes());
                 toSave.setTotal(total);
-                return Mono.just(orderRepository.save(toSave));
+                return orderRepository.save(toSave);
             });
 
         }
@@ -79,27 +80,29 @@ public class OrderService {
         try{
             log.debug("update order with uuid {}, request: {}", id, orderRequest);
             checkOrderRequest(orderRequest);
-            Order savedOrder = orderRepository.findById(id).orElseThrow(ItemNotFoundException::new);
-            Instant now = Instant.now(clock);
-            if(now.isAfter(savedOrder.getEditableUntil())){
-                log.debug("editing closed order with id {}", id);
-                return Mono.error(new EditingClosedOrderException());
-            }
-            else{
-                log.debug("editing open order with id {}", id);
-                return customerService.findByEmailAndSave(orderRequest.customer()).flatMap(customer -> {
-                    log.debug("editing open order with id {}, customer saved {}", id, customer);
-                    Money total = orderRules.calculateTotal(orderRequest.pilotes());
-                    populateOrder(savedOrder, savedOrder.getCreatedAt(), savedOrder.getEditableUntil());
-                    savedOrder.setCustomer(customer);
-                    savedOrder.setDelivery(orderRequest.delivery());
-                    savedOrder.setPilotes(orderRequest.pilotes());
-                    savedOrder.setTotal(total);
-                    return Mono.just(orderRepository.save(savedOrder));
-                });
-            }
+            return orderRepository.findById(id).switchIfEmpty(Mono.error(new ItemNotFoundException()))
+                    .flatMap(savedOrder ->{
+                        Instant now = Instant.now(clock);
+                        if(now.isAfter(savedOrder.getEditableUntil())){
+                            log.debug("editing closed order with id {}", id);
+                            return Mono.error(new EditingClosedOrderException());
+                        }
+                        else{
+                            log.debug("editing open order with id {}", id);
+                            return customerService.findByEmailAndSave(orderRequest.customer()).flatMap(customer -> {
+                                log.debug("editing open order with id {}, customer saved {}", id, customer);
+                                Money total = orderRules.calculateTotal(orderRequest.pilotes());
+                                populateOrder(savedOrder, savedOrder.getCreatedAt(), savedOrder.getEditableUntil());
+                                savedOrder.setCustomer(customer);
+                                savedOrder.setDelivery(orderRequest.delivery());
+                                savedOrder.setPilotes(orderRequest.pilotes());
+                                savedOrder.setTotal(total);
+                                return orderRepository.save(savedOrder);
+                            });
+                        }
+                    });
         }
-        catch (BadPilotesOrderException | ItemNotFoundException e){
+        catch (BadPilotesOrderException e){
             return Mono.error(e);
         }
         catch(Exception e){

@@ -1,18 +1,17 @@
 package com.tui.proof.domain.entities.base;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Embeddable
 @ToString
 public class Money{
-    @Column(name = "money_value", nullable = false)
     BigDecimal value;
 
     public Money(String value){

@@ -29,17 +29,16 @@ public class CustomerServiceTest {
     @Test
     public void shouldFind(){
         Customer customer = FakeCustomer.buildCustomer();
-        Optional<Customer> expected = Optional.of(new Customer());
-        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(expected);
+        Customer expected = new Customer();
+        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(Mono.just(expected));
         Mono<Customer> actual = customerService.findByEmail(customer.getEmail());
-        StepVerifier.create(actual).expectNext(expected.get()).expectComplete();
+        StepVerifier.create(actual).expectNext(expected).expectComplete();
     }
 
     @Test
     public void shouldNotFind(){
         Customer customer = FakeCustomer.buildCustomer();
-        Optional<Customer> expected = Optional.empty();
-        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(expected);
+        when(customerRepository.findByEmail(customer.getEmail())).thenReturn(Mono.empty());
         Mono<Customer> actual = customerService.findByEmail(customer.getEmail());
         StepVerifier.create(actual).expectComplete();
     }
@@ -47,7 +46,7 @@ public class CustomerServiceTest {
     @Test
     public void shouldSave() {
         Customer expected = FakeCustomer.buildCustomer();
-        when(customerRepository.save(any())).thenReturn(expected);
+        when(customerRepository.save(any())).thenReturn(Mono.just(expected));
         Mono<Customer> actual = customerService.save(expected);
         StepVerifier.create(actual).expectNext(expected).expectComplete();
     }
