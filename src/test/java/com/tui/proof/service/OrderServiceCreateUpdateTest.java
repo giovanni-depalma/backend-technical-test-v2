@@ -18,7 +18,6 @@ import reactor.test.StepVerifier;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,7 +25,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceCreateUpdateTest {
@@ -50,7 +48,7 @@ public class OrderServiceCreateUpdateTest {
     private OrderService service;
 
     @Test
-    public void shouldCreateOrder() throws BadPilotesOrderException {
+    public void shouldCreateOrder() {
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expectedOrder = FakeOrder.buildOrder(request);
         Instant now = expectedOrder.getCreatedAt();
@@ -76,7 +74,7 @@ public class OrderServiceCreateUpdateTest {
     }
 
     @Test
-    public void shouldNotCreateAfterRepositoryError() throws BadPilotesOrderException {
+    public void shouldNotCreateAfterRepositoryError() {
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expectedOrder = FakeOrder.buildOrder(request);
         Instant now = expectedOrder.getCreatedAt();
@@ -95,12 +93,12 @@ public class OrderServiceCreateUpdateTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(false);
         Mono<Order> actual = service.createOrder(request);
-        StepVerifier.create(actual).expectError(BadPilotesOrderException.class).verify();;
+        StepVerifier.create(actual).expectError(BadPilotesOrderException.class).verify();
     }
 
 
     @Test
-    public void shouldUpdateOrderUntilTheEnd() throws BadPilotesOrderException, EditingClosedOrderException, ItemNotFoundException {
+    public void shouldUpdateOrderUntilTheEnd() {
         Order orderAlreadyPresent = FakeOrder.buildOrder();
         UUID id = orderAlreadyPresent.getId();
         OrderRequest request = FakeOrder.buildOrderRequest();
@@ -127,11 +125,10 @@ public class OrderServiceCreateUpdateTest {
 
     @Test
     public void shouldNotUpdateWithBadPilotes() {
-        UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildBadOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(false);
         Mono<Order> actual = service.createOrder(request);
-        StepVerifier.create(actual).expectError(BadPilotesOrderException.class).verify();;
+        StepVerifier.create(actual).expectError(BadPilotesOrderException.class).verify();
     }
 
     @Test
@@ -155,7 +152,7 @@ public class OrderServiceCreateUpdateTest {
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenReturn(Mono.empty());
         Mono<Order> actual = service.updateOrder(id, request);
-        StepVerifier.create(actual).expectError(ItemNotFoundException.class).verify();;
+        StepVerifier.create(actual).expectError(ItemNotFoundException.class).verify();
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.tui.proof.presenter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.config.WebSecurityConfig;
 import com.tui.proof.config.WebSecurityConfigParameters;
 import com.tui.proof.domain.entities.Customer;
@@ -12,21 +11,17 @@ import com.tui.proof.mapper.AddressMapperImpl;
 import com.tui.proof.mapper.CustomerMapperImpl;
 import com.tui.proof.mapper.OrderMapperImpl;
 import com.tui.proof.presenter.serializer.MoneySerializer;
-import com.tui.proof.service.CustomerService;
 import com.tui.proof.service.OrderService;
 import com.tui.proof.service.api.OrderRequest;
 import com.tui.proof.util.FakeOrder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 
@@ -35,11 +30,6 @@ import java.util.UUID;
 import static com.tui.proof.presenter.Util.URI_ORDERS;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebFluxTest(OrderController.class)
 @Import({OrderMapperImpl.class, CustomerMapperImpl.class, AddressMapperImpl.class, WebSecurityConfig.class, WebSecurityConfigParameters.class})
@@ -52,7 +42,7 @@ public class OrderControllerCreateUpdateTest {
 
 
     @Test
-    public void shouldCreateOrder() throws Exception {
+    public void shouldCreateOrder(){
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expected = FakeOrder.buildOrder();
         when(orderService.createOrder(request)).thenReturn(Mono.just(expected));
@@ -66,9 +56,8 @@ public class OrderControllerCreateUpdateTest {
 
 
     @Test
-    public void shouldNotCreateOrderWithBadData() throws Exception {
+    public void shouldNotCreateOrderWithBadData(){
         OrderRequest request = FakeOrder.buildBadOrderRequest();
-        ObjectMapper objectMapper = new ObjectMapper();
         this.webClient.post().uri(URI_ORDERS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(FakeOrder.buildResource(request)))
@@ -76,7 +65,7 @@ public class OrderControllerCreateUpdateTest {
     }
 
     @Test
-    public void shouldUpdateOrder() throws Exception {
+    public void shouldUpdateOrder(){
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildOrderRequest();
         Order expected = FakeOrder.buildOrder();
@@ -89,7 +78,7 @@ public class OrderControllerCreateUpdateTest {
     }
 
     @Test
-    public void shouldNotUpdateOrderWithBadData() throws Exception {
+    public void shouldNotUpdateOrderWithBadData() {
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildBadOrderRequest();
         Order expected = FakeOrder.buildOrder();
@@ -101,7 +90,7 @@ public class OrderControllerCreateUpdateTest {
     }
 
     @Test
-    public void shouldNotUpdateOrderNotPresent() throws Exception {
+    public void shouldNotUpdateOrderNotPresent(){
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderService.updateOrder(id, request)).thenReturn(Mono.error(new ItemNotFoundException()));
@@ -112,7 +101,7 @@ public class OrderControllerCreateUpdateTest {
     }
 
     @Test
-    public void shouldNotUpdateOrderClosed() throws Exception {
+    public void shouldNotUpdateOrderClosed(){
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderService.updateOrder(id, request)).thenReturn(Mono.error(new EditingClosedOrderException()));
@@ -123,7 +112,7 @@ public class OrderControllerCreateUpdateTest {
     }
 
     @Test
-    public void shouldNotUpdateBadNumberOfPilotes() throws Exception {
+    public void shouldNotUpdateBadNumberOfPilotes(){
         UUID id = UUID.randomUUID();
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderService.updateOrder(id, request)).thenReturn(Mono.error(new BadPilotesOrderException()));

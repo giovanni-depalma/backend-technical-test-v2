@@ -1,15 +1,10 @@
 package com.tui.proof.presenter;
 
-import com.tui.proof.domain.entities.Customer;
-import com.tui.proof.domain.exception.BadPilotesOrderException;
-import com.tui.proof.domain.exception.EditingClosedOrderException;
-import com.tui.proof.domain.exception.ItemNotFoundException;
 import com.tui.proof.mapper.CustomerMapper;
 import com.tui.proof.mapper.OrderMapper;
 import com.tui.proof.presenter.api.CustomerResource;
 import com.tui.proof.presenter.api.OrderRequestResource;
 import com.tui.proof.presenter.api.OrderResource;
-import com.tui.proof.service.CustomerService;
 import com.tui.proof.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,8 +38,7 @@ public class OrderController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<OrderResource> create(
-            @Valid @RequestBody OrderRequestResource request)
-            throws BadPilotesOrderException {
+            @Valid @RequestBody OrderRequestResource request) {
         return  orderService.createOrder(orderMapper.toDomain(request))
                 .map(orderMapper::toResource);
     }
@@ -57,7 +51,7 @@ public class OrderController {
             @ApiResponse(description = "Order not found", responseCode = "404", content = @Content),
             @ApiResponse(description = "Order closed", responseCode = "409", content = @Content)
     })
-    public Mono<OrderResource> update(@PathVariable UUID id, @Valid @RequestBody OrderRequestResource request) throws BadPilotesOrderException, EditingClosedOrderException, ItemNotFoundException {
+    public Mono<OrderResource> update(@PathVariable UUID id, @Valid @RequestBody OrderRequestResource request){
         return orderService.updateOrder(id, orderMapper.toDomain(request))
                 .map(orderMapper::toResource);
     }

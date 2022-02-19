@@ -1,6 +1,5 @@
 package com.tui.proof.repository;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.tui.proof.domain.entities.Order;

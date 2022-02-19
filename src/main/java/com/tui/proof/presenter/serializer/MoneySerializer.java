@@ -9,7 +9,6 @@ import org.springframework.boot.jackson.JsonComponent;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.Locale;
 
 @JsonComponent

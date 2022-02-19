@@ -13,9 +13,6 @@ public interface CustomerMapper {
     void update(Customer customer, @MappingTarget Customer target);
 
     @Mapping(target = "id", ignore = true)
-    void update(CustomerResource customer, @MappingTarget Customer target);
-
-    @Mapping(target = "id", ignore = true)
     Customer toDomain(CustomerResource item);
 
     CustomerResource toResource(Customer item);

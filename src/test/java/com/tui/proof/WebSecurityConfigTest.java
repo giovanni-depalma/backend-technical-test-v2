@@ -12,9 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 public class WebSecurityConfigTest {
 
     @Test
@@ -30,11 +27,12 @@ public class WebSecurityConfigTest {
                 .claim("resource_access", resourceAccess)
                 .build();
         Flux<GrantedAuthority> actual = converter.convert(jwt);
+        Assertions.assertNotNull(actual);
         StepVerifier.create(actual.map(Object::toString))
                 .expectNext("ROLE_ADMIN")
                 .expectNext("ROLE_CUSTOMER")
                 .expectNext("ROLE_OTHER")
-                .expectComplete();
+                .verifyComplete();
     }
 
     @Test
@@ -44,6 +42,8 @@ public class WebSecurityConfigTest {
                 .header("alg", "none")
                 .claim("scope", "message:read")
                 .build();
-        Assertions.assertThrows(Exception.class, () -> converter.convert(jwt));
+        Flux<GrantedAuthority> actual = converter.convert(jwt);
+        Assertions.assertNotNull(actual);
+        StepVerifier.create(actual).expectError().verify();
     }
 }

@@ -7,8 +7,6 @@ import com.tui.proof.domain.exception.EditingClosedOrderException;
 import com.tui.proof.domain.exception.ItemNotFoundException;
 import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.domain.rules.OrderRules;
-import com.tui.proof.mapper.CustomerMapper;
-import com.tui.proof.presenter.api.CustomerResource;
 import com.tui.proof.repository.OrderRepository;
 import com.tui.proof.service.api.OrderRequest;
 import lombok.AllArgsConstructor;
@@ -18,12 +16,9 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.function.TupleUtils;
-import reactor.util.function.Tuple2;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -77,7 +72,7 @@ public class OrderService {
             return checkOrderRequest(orderRequest)
                     .then(findByIdForUpdate(id))
                     .zipWhen( o -> customerService.findByEmailAndSave(orderRequest.customer()))
-                    .flatMap(TupleUtils.function( (order, customer) -> save(order,orderRequest,customer)));
+                    .flatMap(t -> save(t.getT1(),orderRequest,t.getT2()));
         } catch (Exception e) {
             log.error("error saving {}", orderRequest, e);
             return Mono.error(new ServiceException());

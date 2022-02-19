@@ -1,6 +1,5 @@
 package com.tui.proof.presenter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.config.WebSecurityConfig;
 import com.tui.proof.config.WebSecurityConfigParameters;
 import com.tui.proof.domain.entities.Customer;
@@ -15,22 +14,17 @@ import com.tui.proof.util.FakeOrder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
 
-import static com.tui.proof.presenter.Util.URI_ORDERS;
 import static com.tui.proof.presenter.Util.URI_ORDERS_FIND_BY_CUSTOMER;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebFluxTest(OrderController.class)
 @Import({WebSecurityConfig.class, WebSecurityConfigParameters.class})
@@ -52,7 +46,7 @@ public class OrderControllerNotAuthenticatedTest {
     private CustomerMapper customerMapper;
 
     @Test
-    public void shouldNotFindOrdersByCustomer() throws Exception {
+    public void shouldNotFindOrdersByCustomer() {
         int expectedSize = 2;
         Customer request = FakeCustomer.buildCustomer();
         List<Order> expected = FakeListBuilder.buildList(expectedSize, FakeOrder::buildOrder);

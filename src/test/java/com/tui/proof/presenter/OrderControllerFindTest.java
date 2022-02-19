@@ -1,6 +1,5 @@
 package com.tui.proof.presenter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.config.WebSecurityConfig;
 import com.tui.proof.config.WebSecurityConfigParameters;
 import com.tui.proof.domain.entities.Customer;
@@ -9,7 +8,6 @@ import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.mapper.AddressMapperImpl;
 import com.tui.proof.mapper.CustomerMapperImpl;
 import com.tui.proof.mapper.OrderMapperImpl;
-import com.tui.proof.presenter.api.OrderResource;
 import com.tui.proof.presenter.serializer.MoneySerializer;
 import com.tui.proof.service.CustomerService;
 import com.tui.proof.service.OrderService;
@@ -23,22 +21,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
-import static com.tui.proof.presenter.Util.URI_ORDERS;
 import static com.tui.proof.presenter.Util.URI_ORDERS_FIND_BY_CUSTOMER;
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 
 @WebFluxTest(OrderController.class)
 @WithMockUser(username = "admin", roles = {"ADMIN"})
@@ -56,7 +47,7 @@ public class OrderControllerFindTest {
 
 
     @Test
-    public void shouldFindOrdersByCustomer() throws Exception {
+    public void shouldFindOrdersByCustomer() {
         int expectedSize = 2;
         Customer request = FakeCustomer.buildCustomer();
         List<Order> expected = FakeListBuilder.buildList(expectedSize, FakeOrder::buildOrder);
@@ -71,8 +62,7 @@ public class OrderControllerFindTest {
     }
 
     @Test
-    public void shouldNotFindOrdersByCustomer() throws Exception {
-        int expectedSize = 2;
+    public void shouldNotFindOrdersByCustomer() {
         Customer request = FakeCustomer.buildCustomer();
         when(orderService.findByCustomer(request)).thenReturn(Flux.error(new ServiceException()));
         this.webClient.post().uri(URI_ORDERS_FIND_BY_CUSTOMER)
