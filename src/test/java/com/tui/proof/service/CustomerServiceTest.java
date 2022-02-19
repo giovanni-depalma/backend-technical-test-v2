@@ -1,6 +1,7 @@
 package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Customer;
+import com.tui.proof.mapper.CustomerMapper;
 import com.tui.proof.repository.CustomerRepository;
 import com.tui.proof.util.FakeCustomer;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ public class CustomerServiceTest {
     @Mock
     private CustomerRepository customerRepository;
 
+    @Mock
+    private CustomerMapper customerMapper;
+
     @InjectMocks
     private CustomerService customerService;
 
@@ -32,7 +36,7 @@ public class CustomerServiceTest {
         Customer expected = new Customer();
         when(customerRepository.findByEmail(customer.getEmail())).thenReturn(Mono.just(expected));
         Mono<Customer> actual = customerService.findByEmail(customer.getEmail());
-        StepVerifier.create(actual).expectNext(expected).expectComplete();
+        StepVerifier.create(actual).expectNext(expected).verifyComplete();
     }
 
     @Test
@@ -40,7 +44,7 @@ public class CustomerServiceTest {
         Customer customer = FakeCustomer.buildCustomer();
         when(customerRepository.findByEmail(customer.getEmail())).thenReturn(Mono.empty());
         Mono<Customer> actual = customerService.findByEmail(customer.getEmail());
-        StepVerifier.create(actual).expectComplete();
+        StepVerifier.create(actual).verifyComplete();
     }
 
     @Test
@@ -48,6 +52,24 @@ public class CustomerServiceTest {
         Customer expected = FakeCustomer.buildCustomer();
         when(customerRepository.save(any())).thenReturn(Mono.just(expected));
         Mono<Customer> actual = customerService.save(expected);
-        StepVerifier.create(actual).expectNext(expected).expectComplete();
+        StepVerifier.create(actual).expectNext(expected).verifyComplete();
+    }
+
+    @Test
+    public void shouldNotFindByMailAndSave() {
+        Customer expected = FakeCustomer.buildCustomer();
+        when(customerRepository.findByEmail(expected.getEmail())).thenReturn(Mono.empty());
+        when(customerRepository.save(any())).thenReturn(Mono.just(expected));
+        Mono<Customer> actual = customerService.findByEmailAndSave(expected);
+        StepVerifier.create(actual).expectNext(expected).verifyComplete();
+    }
+
+    @Test
+    public void shouldFindByMailAndSave() {
+        Customer expected = FakeCustomer.buildCustomer();
+        when(customerRepository.findByEmail(expected.getEmail())).thenReturn(Mono.just(expected));
+        when(customerRepository.save(any())).thenReturn(Mono.just(expected));
+        Mono<Customer> actual = customerService.findByEmailAndSave(expected);
+        StepVerifier.create(actual).expectNext(expected).verifyComplete();
     }
 }

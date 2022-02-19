@@ -5,6 +5,7 @@ import com.tui.proof.config.WebSecurityConfig;
 import com.tui.proof.config.WebSecurityConfigParameters;
 import com.tui.proof.domain.entities.Customer;
 import com.tui.proof.domain.entities.Order;
+import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.mapper.AddressMapperImpl;
 import com.tui.proof.mapper.CustomerMapperImpl;
 import com.tui.proof.mapper.OrderMapperImpl;
@@ -66,6 +67,20 @@ public class OrderControllerFindTest {
                 .exchange()
                 //.expectBodyList(OrderResource.class).hasSize(expectedSize)
                 .expectAll(OrderMatcher.checkOrders(expected));
+
+    }
+
+    @Test
+    public void shouldNotFindOrdersByCustomer() throws Exception {
+        int expectedSize = 2;
+        Customer request = FakeCustomer.buildCustomer();
+        when(orderService.findByCustomer(request)).thenReturn(Flux.error(new ServiceException()));
+        this.webClient.post().uri(URI_ORDERS_FIND_BY_CUSTOMER)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(FakeCustomer.buildResource(request)))
+                .exchange()
+                //.expectBodyList(OrderResource.class).hasSize(expectedSize)
+                .expectStatus().is5xxServerError();
 
     }
 

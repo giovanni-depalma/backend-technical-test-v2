@@ -76,11 +76,18 @@ public class OrderServiceCreateUpdateTest {
     }
 
     @Test
-    public void shouldNotCreateAfterInternalError() {
+    public void shouldNotCreateAfterRepositoryError() throws BadPilotesOrderException {
         OrderRequest request = FakeOrder.buildOrderRequest();
-        when(orderRules.allowedPilotes(request.pilotes())).thenThrow(RuntimeException.class);
+        Order expectedOrder = FakeOrder.buildOrder(request);
+        Instant now = expectedOrder.getCreatedAt();
+        when(clock.instant()).thenReturn(now);
+        when(orderRules.calculateTotal(request.pilotes())).thenReturn(expectedOrder.getTotal());
+        when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
+        when(customerService.findByEmailAndSave(any())).thenReturn(Mono.just(expectedOrder.getCustomer()));
+        when(orderRules.calculateEditableUntil(now)).thenReturn(expectedOrder.getEditableUntil());
+        when(orderRepository.save(any())).thenReturn(Mono.error(new RuntimeException()));
         Mono<Order> actual = service.createOrder(request);
-        StepVerifier.create(actual).expectError(ServiceException.class);
+        StepVerifier.create(actual).expectError(ServiceException.class).verify();
     }
 
     @Test
@@ -88,8 +95,9 @@ public class OrderServiceCreateUpdateTest {
         OrderRequest request = FakeOrder.buildOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(false);
         Mono<Order> actual = service.createOrder(request);
-        StepVerifier.create(actual).expectError(BadPilotesOrderException.class);
+        StepVerifier.create(actual).expectError(BadPilotesOrderException.class).verify();;
     }
+
 
     @Test
     public void shouldUpdateOrderUntilTheEnd() throws BadPilotesOrderException, EditingClosedOrderException, ItemNotFoundException {
@@ -123,7 +131,7 @@ public class OrderServiceCreateUpdateTest {
         OrderRequest request = FakeOrder.buildBadOrderRequest();
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(false);
         Mono<Order> actual = service.createOrder(request);
-        StepVerifier.create(actual).expectError(BadPilotesOrderException.class);
+        StepVerifier.create(actual).expectError(BadPilotesOrderException.class).verify();;
     }
 
     @Test
@@ -135,8 +143,9 @@ public class OrderServiceCreateUpdateTest {
         when(clock.instant()).thenReturn(timeAfterClose);
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenReturn(Mono.just(orderAlreadyPresent));
+        //when(customerService.findByEmailAndSave(any())).thenReturn(Mono.just(orderAlreadyPresent.getCustomer()));
         Mono<Order> actual = service.updateOrder(id, request);
-        StepVerifier.create(actual).expectError(EditingClosedOrderException.class);
+        StepVerifier.create(actual).expectError(EditingClosedOrderException.class).verify();
     }
 
     @Test
@@ -146,7 +155,7 @@ public class OrderServiceCreateUpdateTest {
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenReturn(Mono.empty());
         Mono<Order> actual = service.updateOrder(id, request);
-        StepVerifier.create(actual).expectError(ItemNotFoundException.class);
+        StepVerifier.create(actual).expectError(ItemNotFoundException.class).verify();;
     }
 
     @Test
@@ -157,6 +166,6 @@ public class OrderServiceCreateUpdateTest {
         when(orderRules.allowedPilotes(request.pilotes())).thenReturn(true);
         when(orderRepository.findById(id)).thenThrow(RuntimeException.class);
         Mono<Order> actual = service.updateOrder(id, request);
-        StepVerifier.create(actual).expectError(ServiceException.class);
+        StepVerifier.create(actual).expectError(ServiceException.class).verify();
     }
 }
