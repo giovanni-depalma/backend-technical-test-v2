@@ -44,7 +44,11 @@ public class OrderService {
         log.debug("findByCustomer with by example {}", customer);
         return customerService.findByExample(customer)
                 .collectMap(Customer::getId)
-                .flatMapMany(this::findByCustomerMap);
+                .flatMapMany(this::findByCustomerMap)
+                .onErrorMap(e -> {
+                    log.error("error find by customer: {}", customer, e);
+                    return errorMapper(e);
+                });
     }
 
 
@@ -53,7 +57,11 @@ public class OrderService {
         log.debug("create order: {}", orderRequest);
         return checkOrderRequest(orderRequest)
                 .flatMap(check -> customerService.findByEmailAndSave(orderRequest.customer()))
-                .flatMap(customer -> save(prepareNewOrder(), orderRequest, customer));
+                .flatMap(customer -> save(prepareNewOrder(), orderRequest, customer))
+                .onErrorMap(e -> {
+                    log.error("error create order: {}", orderRequest, e);
+                    return errorMapper(e);
+                });
     }
 
     private Order prepareNewOrder() {
@@ -74,15 +82,12 @@ public class OrderService {
                 .flatMap(t -> save(t.getT1(), orderRequest, t.getT2()))
                 .onErrorMap(e -> {
                     log.error("error update order with uuid {}, request: {}", id, orderRequest, e);
-                    return errorMap(e);
+                    return errorMapper(e);
                 });
     }
 
-    private Throwable errorMap(Throwable e) {
-        if (e instanceof ServiceException || e instanceof BadPilotesOrderException || e instanceof EditingClosedOrderException || e instanceof ItemNotFoundException)
-            return e;
-        else
-            return new ServiceException();
+    private Throwable errorMapper(Throwable e) {
+        return e instanceof ServiceException ? e : new ServiceException();
     }
 
     private Mono<Order> save(Order order, OrderRequest request, Customer customer) {
@@ -94,7 +99,7 @@ public class OrderService {
         order.setTotal(total);
         return orderRepository.save(order).onErrorMap(e -> {
             log.error("save error, request {}, order {} with customer {}", request, order, customer, e);
-            throw new ServiceException();
+            return errorMapper(e);
         });
     }
 

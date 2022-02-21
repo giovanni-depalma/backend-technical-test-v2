@@ -1,4 +1,4 @@
 package com.tui.proof.domain.exception;
 
-public class EditingClosedOrderException extends Exception{
+public class EditingClosedOrderException extends ServiceException{
 }

@@ -1,4 +1,4 @@
 package com.tui.proof.domain.exception;
 
-public class ItemNotFoundException extends Exception{
+public class ItemNotFoundException extends ServiceException{
 }

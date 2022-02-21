@@ -37,11 +37,19 @@ public class OrderServiceFindTest {
     public void shouldFindByCustomer() {
         Customer customer = FakeCustomer.buildCustomer();
         List<Customer> expectedCustomers = FakeListBuilder.buildList(Customer::new);
-        List<Order> expected = FakeListBuilder.buildList(()->FakeOrder.buildOrder());
+        List<Order> expected = FakeListBuilder.buildList(() -> FakeOrder.buildOrder());
         when(customerService.findByExample(ArgumentMatchers.any())).thenReturn(Flux.fromIterable(expectedCustomers));
         when(orderRepository.findByCustomerIn(any())).thenReturn(Flux.fromIterable(expected));
         Flux<Order> actual = orderService.findByCustomer(customer);
         StepVerifier.create(actual).expectNext(expected.toArray(new Order[0])).verifyComplete();
+    }
+
+    @Test
+    public void shouldFindByCustomerEmpty() {
+        Customer customer = FakeCustomer.buildCustomer();
+        when(customerService.findByExample(ArgumentMatchers.any())).thenReturn(Flux.empty());
+        Flux<Order> actual = orderService.findByCustomer(customer);
+        StepVerifier.create(actual).verifyComplete();
     }
 
     @Test
