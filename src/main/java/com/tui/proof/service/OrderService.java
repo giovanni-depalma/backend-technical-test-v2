@@ -11,14 +11,14 @@ import com.tui.proof.repository.OrderRepository;
 import com.tui.proof.service.api.OrderRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -30,25 +30,25 @@ public class OrderService {
     private Clock clock;
     private CustomerService customerService;
 
+    private Flux<Order> findByCustomerMap(Map<UUID, Customer> customers){
+        if(customers.isEmpty())
+            return Flux.empty();
+        return orderRepository.findByCustomerIn(customers.keySet()).map(o -> {
+            Customer c = customers.get(o.getCustomer().getId());
+            o.setCustomer(c);
+            return o;
+        });
+    }
+
     public Flux<Order> findByCustomer(Customer customer) {
-        try {
-            log.debug("findByCustomer with by example {}", customer);
-            ExampleMatcher matcher = ExampleMatcher.matching()
-                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase();
-            Order orderData = new Order();
-            orderData.setCustomer(customer);
-            return orderRepository.findAll(Example.of(orderData, matcher))
-                    .onErrorMap(e -> findByCustomerError(e,customer));
-        } catch (Exception e) {
-            return Flux.error(findByCustomerError(e,customer));
-        }
+        log.debug("findByCustomer with by example {}", customer);
+        return customerService.findByExample(customer)
+                .collectMap(Customer::getId)
+                .flatMapMany(this::findByCustomerMap);
     }
 
-    private ServiceException findByCustomerError(Throwable e, Customer customer){
-        log.error("error finding {}", customer, e);
-        return new ServiceException();
-    }
 
+    @Transactional
     public Mono<Order> createOrder(OrderRequest orderRequest) {
         log.debug("create order: {}", orderRequest);
         return checkOrderRequest(orderRequest)
@@ -60,12 +60,12 @@ public class OrderService {
         Instant createdAt = Instant.now(clock);
         Instant editableUntil = orderRules.calculateEditableUntil(createdAt);
         Order toSave = new Order();
-        toSave.setId(UUID.randomUUID());
         toSave.setCreatedAt(createdAt);
         toSave.setEditableUntil(editableUntil);
         return toSave;
     }
 
+    @Transactional
     public Mono<Order> updateOrder(UUID id, OrderRequest orderRequest) {
         try {
             log.debug("update order with uuid {}, request: {}", id, orderRequest);

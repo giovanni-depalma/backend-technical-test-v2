@@ -1,16 +1,23 @@
 package com.tui.proof.service;
 
 import com.tui.proof.domain.entities.Customer;
+import com.tui.proof.domain.entities.Order;
+import com.tui.proof.domain.exception.ServiceException;
 import com.tui.proof.mapper.CustomerMapper;
 import com.tui.proof.repository.CustomerRepository;
 import com.tui.proof.util.FakeCustomer;
+import com.tui.proof.util.FakeListBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
@@ -68,5 +75,22 @@ public class CustomerServiceTest {
         when(customerRepository.save(any())).thenReturn(Mono.just(expected));
         Mono<Customer> actual = customerService.findByEmailAndSave(expected);
         StepVerifier.create(actual).expectNext(expected).verifyComplete();
+    }
+
+
+    @Test
+    public void shouldFindByExample() {
+        Customer example = new Customer();
+        List<Customer> expected = FakeListBuilder.buildList(Customer::new);
+        when(customerRepository.findAll(ArgumentMatchers.any())).thenReturn(Flux.fromIterable(expected));
+        Flux<Customer> actual = customerService.findByExample(example);
+        StepVerifier.create(actual).expectNext(expected.toArray(new Customer[0])).verifyComplete();
+    }
+
+
+    @Test
+    public void shouldNotFindByCustomerWhenError() {
+        Flux<Customer> actual = customerService.findByExample(null);
+        StepVerifier.create(actual).expectError(ServiceException.class).verify();
     }
 }

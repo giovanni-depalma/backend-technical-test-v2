@@ -6,7 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -15,22 +16,25 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Document
+@Table(value = "order_data")
 public class Order {
     @Id
     private UUID id;
 
+    @Transient
     private Money total;
 
     private Integer pilotes;
 
     @ToString.Exclude
+    @Transient
     private Customer customer;
 
     private Instant createdAt;
 
     private Instant editableUntil;
 
+    @Transient
     private Address delivery;
 
     @Override
