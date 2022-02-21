@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash.clonedeep';
-import {API_URL_PURCHASER} from "../support/util";
+import {API_URL_ORDER} from "../support/util";
 const baseRequest = {
   "pilotes": 5,
   "delivery": {
@@ -22,12 +22,12 @@ const randomStr = (length) => {
   return a;
 }
 
-describe('Purchaser API', () => {
+describe('Orders API', () => {
 
   it('Not create invalid pilotes', () => {
     let updateRequest = cloneDeep(baseRequest);
     updateRequest.pilotes = 2;
-    cy.request({ method: 'POST',  url : `${API_URL_PURCHASER}/`, failOnStatusCode: false, body: updateRequest }).then((response) => {
+    cy.request({ method: 'POST',  url : `${API_URL_ORDER}`, failOnStatusCode: false, body: updateRequest }).then((response) => {
       expect(response.status).to.eq(400);
     })
   })
@@ -35,7 +35,7 @@ describe('Purchaser API', () => {
   it('Not create invalid postcode', () => {
     let updateRequest = cloneDeep(baseRequest);
     updateRequest.delivery.postcode = 2;
-    cy.request({ method: 'POST',  url : `${API_URL_PURCHASER}/`, failOnStatusCode: false, body: updateRequest }).then((response) => {
+    cy.request({ method: 'POST',  url : `${API_URL_ORDER}`, failOnStatusCode: false, body: updateRequest }).then((response) => {
       expect(response.status).to.eq(400);
     })
   })
@@ -43,7 +43,7 @@ describe('Purchaser API', () => {
   it('Not create invalid email', () => {
     let updateRequest = cloneDeep(baseRequest);
     updateRequest.customer.email = "invalid_mail";
-    cy.request({ method: 'POST',  url : `${API_URL_PURCHASER}/`, failOnStatusCode: false, body: updateRequest }).then((response) => {
+    cy.request({ method: 'POST',  url : `${API_URL_ORDER}`, failOnStatusCode: false, body: updateRequest }).then((response) => {
       expect(response.status).to.eq(400);
     })
   })
@@ -51,7 +51,7 @@ describe('Purchaser API', () => {
   it('Not create invalid too long', () => {
     let updateRequest = cloneDeep(baseRequest);
     updateRequest.customer.firstName = randomStr(101);
-    cy.request({ method: 'POST',  url : `${API_URL_PURCHASER}/`, failOnStatusCode: false, body: updateRequest }).then((response) => {
+    cy.request({ method: 'POST',  url : `${API_URL_ORDER}`, failOnStatusCode: false, body: updateRequest }).then((response) => {
       expect(response.status).to.eq(400);
     })
   })

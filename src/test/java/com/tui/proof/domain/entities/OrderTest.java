@@ -2,6 +2,7 @@ package com.tui.proof.domain.entities;
 
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 public class OrderTest {
@@ -11,6 +12,13 @@ public class OrderTest {
                 .withClassName(NameStyle.SIMPLE_NAME)
                 .withIgnoredFields("customer")
                 .withFailOnExcludedFields(true)
+                .verify();
+    }
+
+    @Test
+    public void shouldEquals() {
+        EqualsVerifier.simple().forClass(Order.class)
+                .withIgnoredFields("id")
                 .verify();
     }
 }

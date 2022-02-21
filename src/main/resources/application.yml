@@ -22,19 +22,19 @@ management:
 spring:
   application:
     name: tui-pilotes
-  data:
-    rest:
-      basePath: /
-      detection-strategy: ANNOTATED
+  r2dbc:
+    url: r2dbc:h2:mem:///pilotes
+    username: sa
+    password:
   jpa:
     show-sql: false
-    open-in-view: false
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: ${is.realm-url}/protocol/openid-connect/certs
   main:
+    allow-bean-definition-overriding: true
     orders:
       allowed_quantity:
       - 5
@@ -46,14 +46,12 @@ spring:
       white_list:
         - /swagger-ui/**
         - /v3/api-docs/**
-        - /purchaserOrders/**
         - /profile/**
         - /actuator/**
 springdoc:
   show-login-endpoint: true
   swagger-ui:
+    path: swagger-ui/index.html
     oauth:
       clientId: ${is.client-id}
       clientSecret: ${is.client-secret}
-
-

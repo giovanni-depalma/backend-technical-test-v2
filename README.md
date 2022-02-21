@@ -12,7 +12,7 @@ In order to start the project  follow these simple instructions:
 - Launch Browser on page: http://localhost:8081/swagger-ui/index.html
 
 #### Create your first order 
-Use POST /purchaserOrders
+Use POST /orders
 ```json
 {
   "pilotes": 5,
@@ -56,9 +56,7 @@ If you use an invalid id you will get a 404 error!
 ```
 
 #### View the orders
-To see the orders you have to use "/orders" endpoint. You can choose between:
-- GET /orders get all orders, with sort and pagination  (not required by testing)
-- GET /orders/{id} get the order by id (not required by testing)
+
 - POST /orders/findByCustomer: Allow partial searches: e.g., all orders of customers whose
   name contains an “a” in their name (mandatory for testing)
 
@@ -112,22 +110,13 @@ The project uses the following stack:
 
 - JDK 17
 - Lombok
+- MapStruct
 - Spring Boot 2.6.2
-- Spring Web / Spring Web MVC
-- Spring Data JPA
-- Spring Data Rest
+- Spring WebFlux
+- Spring Data r2dbc (with H2)
 - Spring Security
 - Spring Boot Actuator
 - Identity Server (Keycloak)
-
-The API (in my interpretation) are dedicated to two main actors:
-
-- Miquel Montoro using the secure api
-- The customer using the public api
-
-Spring Data Rest allowed to expose a good API for the administrator, reducing the boilerplate code.
-This will allow for easier maintenance (and evolution) of the code.
-On the other hand, it reduces the layers by directly exposing the model but this was found to be acceptable, especially for "secured" API.
 
 #### Money
 An application must always manage money carefully. Libraries as "Joda-Money" or "Moneta" were evaluated but considered excessive.
@@ -202,23 +191,20 @@ One of the business rules is to prevent an order from being changed after 5 minu
 It's implements the business service using entities and repository.
 The order management is divided into 2 services:
 
-- AdminOrderService: management of the admin's use cases
-- PurchaserOrderService: management of the purchaser's use cases
+- OrderService: management of the order
+- CustomerService: management of the customer
 
 #### Repositories
 It contains the repositories:
 
 - CustomerRepository
-- OrderRepository: some methods exposed by Spring Data Rest:
+- OrderRepository
+
+And  simple converter, to manage the limits of r2dbc about relationships and nested objects. 
 
 #### Presenter
-It contains "Controller", "Serializer", "Rest Configuration" and any mapping objects.
+It contains "Controller", "Serializer" and any mapping objects.
 
-In addition to the exposed endpoints by "Spring Data Rest" there are 2 controllers:
-
-- AdminOrderController: manages the search for customer
-- PurchaserOrderController: manages the creation and updating of an order. A specific object (PurchaserOrder) is returned. 
-There are no big differences between Order and PurchaserOrder but allow for different evolutions.
 
 ### Configuration
 

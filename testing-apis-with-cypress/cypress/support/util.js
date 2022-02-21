@@ -1,7 +1,6 @@
 export const INVALID_ID = '1fe35579-5ce7-46ec-89e0-7e7236700297';
 export const BASE_URL = 'http://localhost:8081';
-export const API_URL_PURCHASER = `${BASE_URL}/purchaserOrders`;
-export const API_URL_ADMIN = `${BASE_URL}/orders`;
+export const API_URL_ORDER = `${BASE_URL}/orders`;
 
 const authToken = "http://localhost:8080/auth/realms/tui-pilotes/protocol/openid-connect/token";
 const username = "tui-admin";

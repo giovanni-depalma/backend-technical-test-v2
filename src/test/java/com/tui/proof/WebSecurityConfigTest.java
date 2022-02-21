@@ -5,18 +5,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 public class WebSecurityConfigTest {
 
     @Test
-    public void shouldGetGrantedAuthorities(){
+    public void shouldGetGrantedAuthorities() {
         WebSecurityConfig.RealmRoleConverter converter = new WebSecurityConfig.RealmRoleConverter();
         final Map<String, Map<String, ?>> resourceAccess = new HashMap<>();
         final Map<String, Object> clientResources = new HashMap<>();
@@ -27,21 +26,24 @@ public class WebSecurityConfigTest {
                 .claim("scope", "message:read")
                 .claim("resource_access", resourceAccess)
                 .build();
-        List<GrantedAuthority> actual = converter.convert(jwt);
-        assertNotNull(actual);
-        assertEquals(3, actual.size());
-        assertEquals("ROLE_ADMIN", actual.get(0).toString());
-        assertEquals("ROLE_CUSTOMER", actual.get(1).toString());
-        assertEquals("ROLE_OTHER", actual.get(2).toString());
+        Flux<GrantedAuthority> actual = converter.convert(jwt);
+        Assertions.assertNotNull(actual);
+        StepVerifier.create(actual.map(Object::toString))
+                .expectNext("ROLE_ADMIN")
+                .expectNext("ROLE_CUSTOMER")
+                .expectNext("ROLE_OTHER")
+                .verifyComplete();
     }
 
     @Test
-    public void shouldThrowException(){
+    public void shouldThrowException() {
         WebSecurityConfig.RealmRoleConverter converter = new WebSecurityConfig.RealmRoleConverter();
         Jwt jwt = Jwt.withTokenValue("token")
                 .header("alg", "none")
                 .claim("scope", "message:read")
                 .build();
-        Assertions.assertThrows(Exception.class, () -> converter.convert(jwt));
+        Flux<GrantedAuthority> actual = converter.convert(jwt);
+        Assertions.assertNotNull(actual);
+        StepVerifier.create(actual).expectError().verify();
     }
 }
